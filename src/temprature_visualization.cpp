@@ -54,6 +54,9 @@ TempratureVisualization ::TempratureVisualization ( int lowTemp ,
 
 void TempratureVisualization ::ThermalCallback ( const sensor_msgs 
                                                         ::Image & msg ) { 
+                                                        
+  ROS_INFO_THROTTLE 
+  ( 5 , "Received a thermal image! Conversion to RGB is starting." ) ; 
 
   sensor_msgs ::Image image ; 
   
@@ -111,6 +114,8 @@ int main ( int argc , char ** argv )
 
   ros ::init ( argc , argv , "temprature_visualization" ) ; 
   
+  ROS_INFO ( "Starting temprature visualization node." ) ; 
+  
   //TODO: Take temprature limits from dynamic reconfigure
   const int minTemp = - 20 ; 
   const int maxTemp = 80 ; 
@@ -136,13 +141,15 @@ int main ( int argc , char ** argv )
     
     highTemp = maxTemp ; 
   
-    ROS_INFO ( "Temprature range was not specified, defaults to [%d,%d]C ." , 
+    ROS_WARN ( "Temprature range was not specified, defaults to [%d,%d]C ." , 
                minTemp , 
                maxTemp ) ; 
   
   }
 
   TempratureVisualization temp_viz ( lowTemp , highTemp ) ; 
+  
+  ROS_INFO ( "Waiting for thermal messages..." ) ; 
 
   ros ::spin ( ) ; 
 
