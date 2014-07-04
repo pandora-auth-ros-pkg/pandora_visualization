@@ -19,7 +19,9 @@ class TempratureVisualization
 
     ros ::NodeHandle nh_ ; 
 
-    ros ::Publisher pub_ ; 
+    ros ::Publisher pub_left_ ; 
+    ros ::Publisher pub_middle_ ; 
+    ros ::Publisher pub_right_ ; 
     
     ros ::Subscriber sub_ ; 
     
@@ -36,9 +38,16 @@ TempratureVisualization ::TempratureVisualization ( int lowTemp ,
   
 { 
 
-  pub_ = nh_ .advertise < sensor_msgs ::Image > ( "/sensors/thermal_viz" , 1 ) ; 
+  pub_left_ = 
+  nh_ .advertise < sensor_msgs ::Image > ( "/sensors/thermal_viz/left" , 1 ) ; 
+
+  pub_middle_ = 
+  nh_ .advertise < sensor_msgs ::Image > ( "/sensors/thermal_viz/middle" , 1 ) ; 
+
+  pub_right_ = 
+  nh_ .advertise < sensor_msgs ::Image > ( "/sensors/thermal_viz/right" , 1 ) ; 
   
-  sub_ = nh_ .subscribe ( "/sensors/thermal" , 1 , 
+  sub_ = nh_ .subscribe ( "/sensors/thermal" , 6 , 
                           & TempratureVisualization ::ThermalCallback , this ) ; 
   
 }
@@ -57,7 +66,17 @@ void TempratureVisualization ::ThermalCallback ( const sensor_msgs
   
   TempratureVisualization ::ConvertImage ( msg , image ) ; 
   
-  this ->pub_ .publish ( image ) ; 
+  if ( image .header .frame_id [ 0 ] == 'l' ) 
+  
+    this ->pub_left_ .publish ( image ) ; 
+  
+  else if ( image .header .frame_id [ 0 ] == 'm' ) 
+  
+    this ->pub_middle_ .publish ( image ) ; 
+  
+  else if ( image .header .frame_id [ 0 ] == 'r' ) 
+  
+    this ->pub_right_ .publish ( image ) ; 
   
 }
 
