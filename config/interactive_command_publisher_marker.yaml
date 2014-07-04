@@ -8,3 +8,7 @@ interactive_head_command_publisher_marker:
   pitch_topic: /linear_head_pitch_controller/command
   yaw_topic: /linear_head_yaw_controller/command
   publish_period: 0.5
+interactive_linear_command_publisher_marker:
+  parent_frame: base_link
+  z_topic: /linear_elevator_controller/command
+  publish_period: 0.5

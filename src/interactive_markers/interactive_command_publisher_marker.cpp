@@ -14,6 +14,9 @@ namespace pandora_visualization
       ros::NodeHandle node_handle_;
       std::string name_;
       
+      ros::Publisher x_publisher_;
+      ros::Publisher y_publisher_;
+      ros::Publisher z_publisher_;
       ros::Publisher roll_publisher_;
       ros::Publisher pitch_publisher_;
       ros::Publisher yaw_publisher_;
@@ -21,10 +24,16 @@ namespace pandora_visualization
       interactive_markers::InteractiveMarkerServer server_;
       
       std::string parent_frame_;
+      std::string x_topic_;
+      std::string y_topic_;
+      std::string z_topic_;
       std::string roll_topic_;
       std::string pitch_topic_;
       std::string yaw_topic_;
 
+      std_msgs::Float64 x_command_;
+      std_msgs::Float64 y_command_;
+      std_msgs::Float64 z_command_;
       std_msgs::Float64 roll_command_;
       std_msgs::Float64 pitch_command_;
       std_msgs::Float64 yaw_command_;
@@ -72,14 +81,34 @@ namespace pandora_visualization
 
   bool InteractiveCommandPublisherMarker::getParams()
   {
-    if (node_handle_.getParam(name_ + "/parent_frame", parent_frame_))
+    if (node_handle_.getParam(name_ + "/x_topic", x_topic_))
     {
-      ROS_INFO_STREAM("Got param parent_frame: " << parent_frame_);
+      ROS_INFO_STREAM("Got param x_topic: " << x_topic_);
     }
     else
     {
-      ROS_ERROR_STREAM("Failed to get param parent_frame using default: base_link");
-      return false;
+      ROS_INFO_STREAM(
+        "Failed to get param x_topic. No x command will be published");
+    }
+
+    if (node_handle_.getParam(name_ + "/y_topic", y_topic_))
+    {
+      ROS_INFO_STREAM("Got param y_topic: " << y_topic_);
+    }
+    else
+    {
+      ROS_INFO_STREAM(
+        "Failed to get param y_topic. No y command will be published");
+    }
+
+    if (node_handle_.getParam(name_ + "/z_topic", z_topic_))
+    {
+      ROS_INFO_STREAM("Got param z_topic: " << z_topic_);
+    }
+    else
+    {
+      ROS_INFO_STREAM(
+        "Failed to get param z_topic. No z command will be published");
     }
 
     if (node_handle_.getParam(name_ + "/roll_topic", roll_topic_))
@@ -111,6 +140,17 @@ namespace pandora_visualization
       ROS_INFO_STREAM(
         "Failed to get param yaw_topic. No yaw command will be published");
     }
+
+    if (node_handle_.getParam(name_ + "/parent_frame", parent_frame_))
+    {
+      ROS_INFO_STREAM("Got param parent_frame: " << parent_frame_);
+    }
+    else
+    {
+      ROS_ERROR_STREAM("Failed to get param parent_frame using default: base_link");
+      return false;
+    }
+
     node_handle_.param(name_ + "/publish_period", publish_period_, 0.5);
     if (publish_period_ <= 0)
     {
@@ -149,11 +189,52 @@ namespace pandora_visualization
     int_marker.controls.push_back(sphere_control);
 
     // create publishers
+    if (x_topic_ != "")
+    {
+      x_publisher_ = node_handle_.advertise<std_msgs::Float64>(x_topic_, 1);
+
+      // create a control which will move the marker around x
+      visualization_msgs::InteractiveMarkerControl move_x_control;
+      move_x_control.name = "move_x";
+      move_x_control.always_visible = true;
+      move_x_control.interaction_mode =
+        visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+      // add the control to the interactive marker
+      int_marker.controls.push_back(move_x_control);
+    }
+    if (y_topic_ != "")
+    {
+      y_publisher_ = node_handle_.advertise<std_msgs::Float64>(y_topic_, 1);
+
+      // create a control which will move the marker around y
+      visualization_msgs::InteractiveMarkerControl move_y_control;
+      move_y_control.name = "move_y";
+      move_y_control.always_visible = true;
+      move_y_control.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, 1.57);
+      move_y_control.interaction_mode =
+        visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+      // add the control to the interactive marker
+      int_marker.controls.push_back(move_y_control);
+    }
+    if (z_topic_ != "")
+    {
+      z_publisher_ = node_handle_.advertise<std_msgs::Float64>(z_topic_, 1);
+
+      // create a control which will move the marker around z
+      visualization_msgs::InteractiveMarkerControl move_z_control;
+      move_z_control.name = "move_z";
+      move_z_control.always_visible = true;
+      move_z_control.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, -1.57, 0);
+      move_z_control.interaction_mode =
+        visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
+      // add the control to the interactive marker
+      int_marker.controls.push_back(move_z_control);
+    }
     if (roll_topic_ != "")
     {
       roll_publisher_ = node_handle_.advertise<std_msgs::Float64>(roll_topic_, 1);
 
-      // create a control which will rotate the box around x
+      // create a control which will rotate the marker around x
       visualization_msgs::InteractiveMarkerControl rotate_x_control;
       rotate_x_control.name = "rotate_x";
       rotate_x_control.always_visible = true;
@@ -165,7 +246,8 @@ namespace pandora_visualization
     if (pitch_topic_ != "")
     {
       pitch_publisher_ = node_handle_.advertise<std_msgs::Float64>(pitch_topic_, 1);
-      // create a control which will rotate the box around y
+
+      // create a control which will rotate the marker around y
       visualization_msgs::InteractiveMarkerControl rotate_y_control;
       rotate_y_control.name = "rotate_y";
       rotate_y_control.always_visible = true;
@@ -179,7 +261,7 @@ namespace pandora_visualization
     {
       yaw_publisher_ = node_handle_.advertise<std_msgs::Float64>(yaw_topic_, 1);
 
-      // create a control which will rotate the box around z
+      // create a control which will rotate the marker around z
       visualization_msgs::InteractiveMarkerControl rotate_z_control;
       rotate_z_control.name = "rotate_z";
       rotate_z_control.always_visible = true;
@@ -203,6 +285,10 @@ namespace pandora_visualization
   void InteractiveCommandPublisherMarker::processFeedback(
       const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback)
   {
+    x_command_.data = feedback->pose.position.x;
+    y_command_.data = feedback->pose.position.y;
+    z_command_.data = feedback->pose.position.z;
+
     tf::Quaternion orientation;
     tf::quaternionMsgToTF(feedback->pose.orientation, orientation);
     tf::Matrix3x3 rotation(orientation);
@@ -212,6 +298,18 @@ namespace pandora_visualization
   void InteractiveCommandPublisherMarker::timerCallback(
     const ros::TimerEvent)
   {
+    if (x_topic_ != "")
+    {
+      x_publisher_.publish(x_command_);
+    }
+    if (y_topic_ != "")
+    {
+      y_publisher_.publish(y_command_);
+    }
+    if (z_topic_ != "")
+    {
+      z_publisher_.publish(z_command_);
+    }
     if (roll_topic_ != "")
     {
       roll_publisher_.publish(roll_command_);

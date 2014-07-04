@@ -22,4 +22,13 @@
     output="screen"
     ns="visualization"
     args="interactive_head_command_publisher_marker"/>
+
+  <node
+    name="interactive_linear_command_publisher_marker"
+    pkg="pandora_visualization"
+    type="interactive_command_publisher_marker"
+    respawn="false"
+    output="screen"
+    ns="visualization"
+    args="interactive_linear_command_publisher_marker"/>
 </launch>

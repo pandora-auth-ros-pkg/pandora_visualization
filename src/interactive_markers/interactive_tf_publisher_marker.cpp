@@ -120,14 +120,14 @@ namespace pandora_visualization
     // add the control to the interactive marker
     int_marker.controls.push_back(sphere_control);
 
-    // create a control which will move the box around x
+    // create a control which will move the marker around x
     visualization_msgs::InteractiveMarkerControl move_x_control;
     move_x_control.name = "move_x";
     move_x_control.always_visible = true;
     move_x_control.interaction_mode =
         visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
         
-    // create a control which will move the box around x
+    // create a control which will move the marker around y
     visualization_msgs::InteractiveMarkerControl move_y_control;
     move_y_control.name = "move_y";
     move_y_control.always_visible = true;
@@ -135,7 +135,7 @@ namespace pandora_visualization
     move_y_control.interaction_mode =
         visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
 
-    // create a control which will move the box around x
+    // create a control which will move the marker around z
     visualization_msgs::InteractiveMarkerControl move_z_control;
     move_z_control.name = "move_z";
     move_z_control.always_visible = true;
@@ -143,10 +143,36 @@ namespace pandora_visualization
     move_z_control.interaction_mode =
         visualization_msgs::InteractiveMarkerControl::MOVE_AXIS;
 
+    // create a control which will rotate the marker around x
+    visualization_msgs::InteractiveMarkerControl rotate_x_control;
+    rotate_x_control.name = "rotate_x";
+    rotate_x_control.always_visible = true;
+    rotate_x_control.interaction_mode =
+      visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+
+    // create a control which will rotate the marker around y
+    visualization_msgs::InteractiveMarkerControl rotate_y_control;
+    rotate_y_control.name = "rotate_y";
+    rotate_y_control.always_visible = true;
+    rotate_y_control.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, 0, 1.57);
+    rotate_y_control.interaction_mode =
+      visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+
+    // create a control which will rotate the marker around z
+    visualization_msgs::InteractiveMarkerControl rotate_z_control;
+    rotate_z_control.name = "rotate_z";
+    rotate_z_control.always_visible = true;
+    rotate_z_control.orientation = tf::createQuaternionMsgFromRollPitchYaw(0, -1.57, 0);
+    rotate_z_control.interaction_mode =
+        visualization_msgs::InteractiveMarkerControl::ROTATE_AXIS;
+
     // add the control to the interactive marker
     int_marker.controls.push_back(move_x_control);
     int_marker.controls.push_back(move_y_control);
     int_marker.controls.push_back(move_z_control);
+    int_marker.controls.push_back(rotate_x_control);
+    int_marker.controls.push_back(rotate_y_control);
+    int_marker.controls.push_back(rotate_z_control);
 
     // add the interactive marker to our collection &
     // tell the server to call processFeedback() when feedback arrives for it
