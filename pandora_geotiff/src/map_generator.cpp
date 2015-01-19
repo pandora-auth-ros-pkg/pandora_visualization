@@ -50,7 +50,7 @@ namespace pandora_geotiff
       //We always have at least one element containing "" in the string list
       if ((plugin_list.size() > 0) && (plugin_list[0].length() > 0)){
         plugin_loader_ = new pluginlib::ClassLoader<MapWriterPluginInterface>(
-        "", "::MapWriterPluginInterface");
+        "pandora_geotiff", "pandora_geotiff::MapWriterPluginInterface");
   
         for (size_t i = 0; i < plugin_list.size(); ++i){
           try
