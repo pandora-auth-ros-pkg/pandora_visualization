@@ -24,7 +24,7 @@ install:
   - ln -s $CI_SOURCE_PATH . # Link the repo we are testing to the new workspace
   - cd ..
   # Install debian dependencies
-  - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y
+  - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -y -r # -r to resolve recursive depends, should not used.
   - source /opt/ros/$ROS_DISTRO/setup.bash
 script: # All commands must exit with code 0 on success. Anything else is considered failure.
   - catkin_make --only-pkg-with-deps $REPOSITORY_NAME
