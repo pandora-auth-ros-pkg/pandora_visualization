@@ -36,9 +36,8 @@
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
 
-
-#ifndef MAPGENERATOR_H
-#define MAPGENERATOR_H
+#ifndef MAP_GENERATOR_H
+#define MAP_GENERATOR_H
 
 #include <cstdio>
 #include <ros/ros.h>
@@ -55,29 +54,30 @@
 #include "pandora_geotiff/map_writer_plugin_interface.h"
 #include "pandora_geotiff/qr_csv_creator.h"
 
-namespace pandora_geotiff
-{
-  
-  class MapGenerator{
-    private:  
-    
+
+namespace pandora_geotiff {
+
+  class MapGenerator {
+
+    private:
+
       GeotiffCreator* geotiffCreator;
-      QrCsvCreator* qrCsvCreator; 
+      QrCsvCreator* qrCsvCreator;
       std::string p_plugin_list_;
       ros::NodeHandle pn_;
       ros::ServiceServer save_mission_service;
       std::vector<boost::shared_ptr<MapWriterPluginInterface> > plugin_vector_;
       pluginlib::ClassLoader<MapWriterPluginInterface>* plugin_loader_;
-      
-      
+
     public:
+
       MapGenerator();
       ~MapGenerator();
-    
+
       void writeGeotiff(const std::string& missionName);
-      bool saveGeotiff(SaveMission::Request& req ,
-        SaveMission::Response& res );
+      bool saveGeotiff(SaveMission::Request& req, SaveMission::Response& res);
   };
-  
-}//namespace pandora_geotiff
+
+} //namespace pandora_geotiff
+
 #endif

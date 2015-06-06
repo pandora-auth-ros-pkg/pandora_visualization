@@ -37,43 +37,36 @@
  *********************************************************************/
 
 #include "gtest/gtest.h"
-
 #include <ros/package.h>
 
 #include "pandora_testing_tools/map_loader/map_loader.h"
-
 #include "pandora_geotiff/geotiff_creator.h"
 
-namespace pandora_geotiff
-{
 
-    class GeotiffCreatorTest : public ::testing::Test
-  {
+namespace pandora_geotiff {
+
+  class GeotiffCreatorTest : public ::testing::Test {
+
     protected:
-      GeotiffCreatorTest()
-      {
+      GeotiffCreatorTest() {
 
         ros::Time::init();
         gc = GeotiffCreator();
-        map = map_loader::loadMap(
-            ros::package::getPath("pandora_geotiff") +
-            "/test/test_maps/map1.yaml");
+        map = map_loader::loadMap(ros::package::getPath("pandora_geotiff") + "/test/test_maps/map1.yaml");
 
         points.resize(250);
 
-        for (int i = 0; i<251; i ++ )
-          {
-            points[i] = Eigen::Vector2f(i/10,i/10);
-          }
+        for (int i = 0; i< 251; i++ ) {
+          points[i] = Eigen::Vector2f(i/10,i/10);
+        }
       }
-      /*Variables*/
+
       std::vector<Eigen::Vector2f> points;
       GeotiffCreator gc;
       nav_msgs::OccupancyGrid map;
   };
 
-  TEST_F(GeotiffCreatorTest, createBackgroundIm)
-  {
+  TEST_F(GeotiffCreatorTest, createBackgroundIm) {
     gc.drawMap(map,"WHITE_MAX",-5,5,1);
     gc.drawMap(map,"MAGENTA",80,110,0);
     gc.drawPath(points,"SOLID_ORANGE",3);

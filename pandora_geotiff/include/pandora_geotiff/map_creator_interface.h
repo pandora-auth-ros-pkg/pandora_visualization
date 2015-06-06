@@ -35,62 +35,81 @@
  * Authors:
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
-#ifndef _MAPCREATORINTERFACE_H__
-#define _MAPCREATORINTERFACE_H__
+
+#ifndef MAP_CREATOR_INTERFACE_H
+#define MAP_CREATOR_INTERFACE_H
 
 #include <vector>
 #include <Eigen/Core>
 #include <nav_msgs/OccupancyGrid.h>
 
-namespace pandora_geotiff
-{
-  
+
+namespace pandora_geotiff {
+
   //!< Type Definitions
   typedef nav_msgs::OccupancyGrid Map;
   typedef nav_msgs::OccupancyGrid* MapPtr;
+
   /**
-  @class 
-  @brief The main Interface  class. Contains the virtual abstract functions used by the plugins for drawing the geotiff .
-  **/
-  
+   * @class
+   * @brief The main interface class. Contains the virtual abstract functions
+   *        used by the plugins for drawing the geotiff.
+   */
+
   class MapWriterInterface {
-  public:
-  /**
-  *@brief Draws the map (occupancy grid ) with a specific color
-  *@details each pixel is painted differently 
-  *@param map [*nav_msgs::OccupancyGrid] : The map to be painted
-  *@param color [&std::string color] : The color to paint each pixel of the occupancy grid
-  *@param grid_space [int ] :The space between the lines in the grid .If 0 then no grid is drawed 
-  *@return void
-  **/
-    virtual void drawMap(const nav_msgs::OccupancyGrid& map,const std::string& color,
-       const int& bottomThres,const int& topThres,const int& grid_space = 0 ) = 0;
-  /**
-  *@brief Draws an Object with a specific color and a specific shape
-  *@details possible shapes {Diamond,Circle,Initial Arrow}
-  *@param coords [&Eigen::Vector2f] : The coordinates of the Object
-  *@param color [&std::string] : The color each Object is painted
-  *@param shape [&std::string] : The shape each Object is painted
-  *@param sequence [int] : The sequence each Object was found
-  *@param size [int] : Size of the objects.Diameter for circles,sides for Diamonds and  special_object  
-  *@return void
-  **/
-    virtual void drawObjectOfInterest(const Eigen::Vector2f& coords,const std::string& color,const std::string& txtcolor,
-      const std::string& shape,const std::string& txt ,const int& size) = 0;
-  /**
-  *@brief Draws A trajectory of a specified color 
-  *@details each pixel is painted differently
-  *@param points [&std::vector<Eigen::Vector2f>]:The points to be painted
-  *@param color [&std::string] : The color each Object is painted
-  *@return void
-  **/
-    virtual void drawPath( const std::vector<Eigen::Vector2f>& points, const std::string& color, const int& width) = 0;
-    
-    virtual ~MapWriterInterface() {};
 
+    public:
 
+      /**
+       * @brief Draws the map (occupancy grid) with a specific color.
+       *
+       * @details Each pixel is painted differently.
+       * @param map [*nav_msgs::OccupancyGrid] The map to be painted.
+       * @param color [&std::string color] The color to paint each pixel of the occupancy grid.
+       * @param grid_space [int] The space between the lines in the grid.
+       *                          If 0 then no grid is drawed.
+       *
+       * @return void
+       */
+
+      virtual void drawMap(const nav_msgs::OccupancyGrid& map,
+                           const std::string& color, const int& bottomThres,
+                           const int& topThres, const int& grid_space = 0 ) = 0;
+      /**
+       * @brief Draws an object with a specific color and a specific shape.
+       * @details possible shapes {Diamond, Circle, Initial Arrow}
+       *
+       * @param coords [&Eigen::Vector2f] The coordinates of the Object.
+       * @param color [&std::string] The color each Object is painted.
+       * @param shape [&std::string] The shape each Object is painted.
+       * @param sequence [int] The sequence each Object was found.
+       * @param size [int] Size of the objects.Diameter for circles, sides for Diamonds and special_object.
+       *
+       * @return void
+       */
+
+      virtual void drawObjectOfInterest(const Eigen::Vector2f& coords,
+                                        const std::string& color,
+                                        const std::string& txtcolor,
+                                        const std::string& shape,
+                                        const std::string& txt ,
+                                        const int& size) = 0;
+      /**
+       * @brief Draws a trajectory of a specified color.
+       * @details Each pixel is painted differently.
+       *
+       * @param points [&std::vector<Eigen::Vector2f>] The points to be painted.
+       * @param color [&std::string] The color each Object is painted.
+       *
+       * @return void
+       */
+
+      virtual void drawPath(const std::vector<Eigen::Vector2f>& points,
+                            const std::string& color, const int& width) = 0;
+
+      virtual ~MapWriterInterface() {};
   };
-}//namespace pandora_geotiff
 
+} //namespace pandora_geotiff
 
 #endif

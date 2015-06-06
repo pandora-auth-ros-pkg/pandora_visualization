@@ -37,8 +37,8 @@
  *********************************************************************/
 
 
-#ifndef Qr_Csv_Creator_H
-#define Qr_Csv_Creator_H
+#ifndef QR_CSV_CREATOR_H
+#define QR_CSV_CREATOR_H
 
 #include <stdlib.h>
 #include <ros/ros.h>
@@ -46,27 +46,31 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <pandora_data_fusion_msgs/QrCsvSrv.h>
 
-namespace pandora_geotiff{
-  
-  class QrCsvCreator{
-  
-  public:
-  
-   QrCsvCreator();
-   void generateQrCsv(std::string missionName);
-     
-  private:
-   
-    bool gotData_;
-    std::string missionNamePrefix_;
-    std::string getDateAndTime();
-    std::string getQrTime(time_t qrTime);
-    std::vector<pandora_data_fusion_msgs::QrNotificationMsg> qrs_;
-    void getQrsData();
-    };
+#include "pandora_data_fusion_msgs/QrCsvSrv.h"
+
+
+namespace pandora_geotiff {
+
+  class QrCsvCreator {
+
+    public:
+
+      QrCsvCreator();
+      void generateQrCsv(std::string missionName);
+
+    private:
+
+      bool gotData_;
+      std::string missionNamePrefix_;
+      std::string getDateAndTime();
+      std::string getQrTime(time_t qrTime);
+      std::vector<pandora_data_fusion_msgs::QrNotificationMsg> qrs_;
+
+      void getQrsData();
+  };
 }
+
 #endif
 
 
