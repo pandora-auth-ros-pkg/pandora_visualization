@@ -49,11 +49,11 @@
 #include <pandora_geotiff/map_writer_plugin_interface.h>
 
 
-namespace pandora_geotiff_plugins {
-
-  class ObjectsWriter : public pandora_geotiff::MapWriterPluginInterface {
+namespace pandora_geotiff_plugins
+{
+  class ObjectsWriter : public pandora_geotiff::MapWriterPluginInterface
+  {
     public:
-
       ObjectsWriter();
       virtual ~ObjectsWriter();
 
@@ -62,7 +62,6 @@ namespace pandora_geotiff_plugins {
       void getObjectsData();
 
     protected:
-
       ros::NodeHandle nh_;
       ros::ServiceClient service_client_;
       std::string service_name_;
@@ -86,7 +85,6 @@ namespace pandora_geotiff_plugins {
       int VICTIMS_SIZE;
 
     private:
-
       std::vector<geometry_msgs::PoseStamped> victims_;
       std::vector<geometry_msgs::PoseStamped> qrs_;
       std::vector<geometry_msgs::PoseStamped> hazmats_;
@@ -96,8 +94,8 @@ namespace pandora_geotiff_plugins {
 
   ObjectsWriter::~ObjectsWriter() {}
 
-  void ObjectsWriter::initialize(const std::string& name) {
-
+  void ObjectsWriter::initialize(const std::string& name)
+  {
     ros::NodeHandle plugin_nh("~" + name);
 
     plugin_nh.param("/pandora_geotiff_node/service_topic_names/data_fusion_objects", service_name_,
@@ -121,11 +119,11 @@ namespace pandora_geotiff_plugins {
     ROS_INFO_NAMED(name_, "Successfully initialized pandora_geotiff  ObjectsWriter plugin %s.", name_.c_str());
   }
 
-
-  void ObjectsWriter::getObjectsData() {
-
+  void ObjectsWriter::getObjectsData()
+  {
     pandora_data_fusion_msgs::GeotiffSrv dataFusionSrv;
-    if (!service_client_.call(dataFusionSrv)) {
+    if (!service_client_.call(dataFusionSrv))
+    {
       ROS_ERROR_NAMED(name_, "Cannot draw Objects, service %s failed", service_client_.getService().c_str());
       return;
     }
@@ -140,11 +138,12 @@ namespace pandora_geotiff_plugins {
   }
 
 
-  void ObjectsWriter::draw(pandora_geotiff::MapWriterInterface *interface) {
-
+  void ObjectsWriter::draw(pandora_geotiff::MapWriterInterface *interface)
+  {
     this->getObjectsData();
 
-    if (!initialized_ || !gotData_) {
+    if (!initialized_ || !gotData_)
+    {
       ROS_WARN_NAMED("OBjectsWriter",
           "ObjectWriter plugin not initilized or no data has been received /n ABORTING DRAWING..");
       return;
@@ -160,13 +159,16 @@ namespace pandora_geotiff_plugins {
     float x;
     float y;
 
-    for (int i = 0 ; i < qrs_.size(); i++) {
-
+    for (int i = 0 ; i < qrs_.size(); i++)
+    {
       // Get Tf.
-      try {
+      try
+      {
         listener.waitForTransform("/map", qrs_[i].header.frame_id, qrs_[i].header.stamp, ros::Duration(1));
         listener.lookupTransform("/map", qrs_[i].header.frame_id, qrs_[i].header.stamp, transform);
-      } catch (tf::TransformException &ex) {
+      }
+      catch (tf::TransformException &ex)
+      {
         ROS_ERROR("%s", ex.what());
         ros::Duration(1.0).sleep();
       }
@@ -186,13 +188,16 @@ namespace pandora_geotiff_plugins {
       interface->drawObjectOfInterest(coords, QRS_COLOR, TXT_COLOR, QRS_SHAPE, txt, QRS_SIZE);
     }
 
-    for (int i = 0; i < victims_.size(); i++) {
-
+    for (int i = 0; i < victims_.size(); i++)
+    {
       // Get Tf.
-      try {
+      try
+      {
         listener.waitForTransform("/map", victims_[i].header.frame_id, victims_[i].header.stamp, ros::Duration(1));
         listener.lookupTransform("/map", victims_[i].header.frame_id, victims_[i].header.stamp, transform);
-      } catch (tf::TransformException &ex) {
+      }
+      catch (tf::TransformException &ex)
+      {
         ROS_ERROR("%s", ex.what());
         ros::Duration(1.0).sleep();
       }
@@ -211,13 +216,16 @@ namespace pandora_geotiff_plugins {
       interface->drawObjectOfInterest(coords, VICTIMS_COLOR, TXT_COLOR, VICTIMS_SHAPE, txt, VICTIMS_SIZE);
     }
 
-    for (int i = 0 ; i < hazmats_.size(); i++) {
-
+    for (int i = 0 ; i < hazmats_.size(); i++)
+    {
       // Get Tf
-      try {
+      try
+      {
         listener.waitForTransform("/map", hazmats_[i].header.frame_id, hazmats_[i].header.stamp, ros::Duration(1));
         listener.lookupTransform("/map", hazmats_[i].header.frame_id, hazmats_[i].header.stamp, transform);
-      } catch (tf::TransformException &ex) {
+      }
+      catch (tf::TransformException &ex)
+      {
         ROS_ERROR("%s", ex.what());
         ros::Duration(1.0).sleep();
       }
@@ -237,7 +245,6 @@ namespace pandora_geotiff_plugins {
     }
     ROS_INFO("DRAWING THE AWESOME OBJECTS SUCCEEDED");
   }
-
 }  // namespace pandora_geotiff_plugins
 
 // Register this planner as a MapWriterPluginInterface plugin.

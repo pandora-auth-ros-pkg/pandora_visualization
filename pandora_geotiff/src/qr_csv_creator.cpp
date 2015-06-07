@@ -9,8 +9,8 @@
  *  modification, are permitted provided that the following conditions
  *  are met:
  *
- *   * Redistributions of source code must retain the above copyright
  *     notice, this list of conditions and the following disclaimer.
+ *   * Redistributions of source code must retain the above copyright
  *   * Redistributions in binary form must reproduce the above
  *     copyright notice, this list of conditions and the following
  *     disclaimer in the documentation and/or other materials provided
@@ -36,25 +36,27 @@
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
 
+#include <string>
 #include "pandora_geotiff/qr_csv_creator.h"
 
 
-namespace pandora_geotiff {
-
-  QrCsvCreator::QrCsvCreator() {
+namespace pandora_geotiff
+{
+  QrCsvCreator::QrCsvCreator()
+  {
     gotData_ = false;
     missionNamePrefix_ = std::string("/RRL_2015_PANDORA_");
   }
 
-  void QrCsvCreator::getQrsData() {
-
+  void QrCsvCreator::getQrsData()
+  {
     ros::NodeHandle nh_("~");
     pandora_data_fusion_msgs::QrCsvSrv dataFusionQrSrv;
 
     ros::ServiceClient service_client_ = nh_.serviceClient<pandora_data_fusion_msgs::QrCsvSrv>("Mavrodis");
-    if (!service_client_.call(dataFusionQrSrv)) {
-      ROS_ERROR("Cannot get Qrs-Content , service %s failed",
-                service_client_.getService().c_str());
+    if (!service_client_.call(dataFusionQrSrv))
+    {
+      ROS_ERROR("Cannot get Qrs-Content , service %s failed", service_client_.getService().c_str());
       return;
     }
     qrs_ = dataFusionQrSrv.response.qrs;
@@ -62,11 +64,11 @@ namespace pandora_geotiff {
     gotData_ = true;
   }
 
-  std::string QrCsvCreator::getDateAndTime() {
-
+  std::string QrCsvCreator::getDateAndTime()
+  {
     // Get the time now.
     time_t t = time(0);
-    struct tm * now = localtime( & t );
+    struct tm * now = localtime(&t);
 
     char buf[20];
     std::stringstream ss;
@@ -82,9 +84,9 @@ namespace pandora_geotiff {
     return str;
   }
 
-  std::string QrCsvCreator::getQrTime(time_t qrTime) {
-
-    struct tm * now = localtime( & qrTime );
+  std::string QrCsvCreator::getQrTime(time_t qrTime)
+  {
+    struct tm * now = localtime(&qrTime);
     char buf[10];
     std::stringstream ss;
     strftime(buf, sizeof(buf), "%T", now);
@@ -95,9 +97,10 @@ namespace pandora_geotiff {
     return str;
   }
 
-  void QrCsvCreator::generateQrCsv(std::string missionName) {
-
-    if (gotData_) {
+  void QrCsvCreator::generateQrCsv(std::string missionName)
+  {
+    if (gotData_)
+    {
       std::string filenameString(missionNamePrefix_);
       filenameString.append(missionName);
       filenameString.append("_qr.csv");
@@ -108,12 +111,13 @@ namespace pandora_geotiff {
       filepath.append(filenameString);
 
       std::ofstream csvFile;
-      csvFile.open (filepath.c_str());
+      csvFile.open(filepath.c_str());
 
       csvFile << "PANDORA AUTh, Greece" << std::endl;
       csvFile << getDateAndTime() << std::endl;
       csvFile << missionName <<std::endl;
-      for (int i = 0 ; i< qrs_.size(); i++) {
+      for (int i = 0 ; i< qrs_.size(); i++)
+      {
         csvFile << i+1 << ";" << qrs_[i].header.stamp
                        << ";" << qrs_[i].content
                        << ";" << qrs_[i].x
@@ -122,4 +126,4 @@ namespace pandora_geotiff {
       csvFile.close();
     }
   }
-} //namespace pandora_geotiff
+}  // namespace pandora_geotiff

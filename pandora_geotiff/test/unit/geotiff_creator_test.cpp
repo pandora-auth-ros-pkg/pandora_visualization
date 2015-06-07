@@ -44,13 +44,13 @@
 #include "pandora_geotiff/geotiff_creator.h"
 
 
-namespace pandora_geotiff {
-
-  class GeotiffCreatorTest : public ::testing::Test {
-
+namespace pandora_geotiff
+{
+  class GeotiffCreatorTest : public ::testing::Test
+  {
     protected:
-      GeotiffCreatorTest() {
-
+      GeotiffCreatorTest()
+      {
         ros::Time::init();
         gc = GeotiffCreator();
         map = map_loader::loadMap(ros::package::getPath("pandora_geotiff") + "/test/test_maps/map1.yaml");
@@ -67,7 +67,8 @@ namespace pandora_geotiff {
       nav_msgs::OccupancyGrid map;
   };
 
-  TEST_F(GeotiffCreatorTest, createBackgroundIm) {
+  TEST_F(GeotiffCreatorTest, createBackgroundIm)
+  {
     gc.drawMap(map, "WHITE_MAX", -5, 5, 1);
     gc.drawMap(map, "MAGENTA", 80, 110, 0);
     gc.drawPath(points, "SOLID_ORANGE", 3);

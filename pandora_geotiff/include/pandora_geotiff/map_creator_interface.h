@@ -47,8 +47,8 @@
 #include <nav_msgs/OccupancyGrid.h>
 
 
-namespace pandora_geotiff {
-
+namespace pandora_geotiff
+{
   //!< Type Definitions
   typedef nav_msgs::OccupancyGrid Map;
   typedef nav_msgs::OccupancyGrid* MapPtr;
@@ -59,10 +59,9 @@ namespace pandora_geotiff {
    *        used by the plugins for drawing the geotiff.
    */
 
-  class MapWriterInterface {
-
+  class MapWriterInterface
+  {
     public:
-
       /**
        * @brief Draws the map (occupancy grid) with a specific color.
        *
@@ -75,8 +74,7 @@ namespace pandora_geotiff {
        * @return void
        */
 
-      virtual void drawMap(const nav_msgs::OccupancyGrid& map,
-                           const std::string& color, const int& bottomThres,
+      virtual void drawMap(const nav_msgs::OccupancyGrid& map, const std::string& color, const int& bottomThres,
                            const int& topThres, const int& grid_space = 0) = 0;
       /**
        * @brief Draws an object with a specific color and a specific shape.
@@ -91,11 +89,8 @@ namespace pandora_geotiff {
        * @return void
        */
 
-      virtual void drawObjectOfInterest(const Eigen::Vector2f& coords,
-                                        const std::string& color,
-                                        const std::string& txtcolor,
-                                        const std::string& shape,
-                                        const std::string& txt,
+      virtual void drawObjectOfInterest(const Eigen::Vector2f& coords, const std::string& color,
+                                        const std::string& txtcolor, const std::string& shape, const std::string& txt,
                                         const int& size) = 0;
       /**
        * @brief Draws a trajectory of a specified color.
@@ -107,12 +102,10 @@ namespace pandora_geotiff {
        * @return void
        */
 
-      virtual void drawPath(const std::vector<Eigen::Vector2f>& points,
-                            const std::string& color, const int& width) = 0;
+      virtual void drawPath(const std::vector<Eigen::Vector2f>& points, const std::string& color, const int& width) = 0;
 
       virtual ~MapWriterInterface() {};
   };
-
 }  // namespace pandora_geotiff
 
 #endif  // PANDORA_GEOTIFF_MAP_CREATOR_INTERFACE_H

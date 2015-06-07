@@ -36,13 +36,15 @@
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
 
+#include <string>
+#include <vector>
 #include "pandora_geotiff/geotiff_creator.h"
 
 
-namespace pandora_geotiff {
-
-  GeotiffCreator::GeotiffCreator() {
-
+namespace pandora_geotiff
+{
+  GeotiffCreator::GeotiffCreator()
+  {
     fake_argc_ = 0;
 
     // Create a QApplication cause otherwise drawing text will crash.
@@ -85,26 +87,29 @@ namespace pandora_geotiff {
     colorMap["DARK_BLUE_W"]     = QColor(0, 40, 120);
     colorMap["LIGHT_GREY"]      = QColor(226, 226, 227);
     colorMap["DARK_GREY"]       = QColor(237, 237, 238);
-    colorMap["BLACK"]           = QColor(190,190,191);
+    colorMap["BLACK"]           = QColor(190, 190, 191);
     colorMap["YELLOW"]          = QColor(255, 200, 0);
     colorMap["WHITE_MAX"]       = QColor(255, 255, 255);
-    colorMap["WHITE_MIN"]       = QColor(128, 128, 128,150);
-    colorMap["LIGHT_GREEN_MAX"] = QColor(180, 230, 180,100);
-    colorMap["LIGHT_GREEN_MIN"] = QColor(130, 230, 130,100);
+    colorMap["WHITE_MIN"]       = QColor(128, 128, 128, 150);
+    colorMap["LIGHT_GREEN_MAX"] = QColor(180, 230, 180, 100);
+    colorMap["LIGHT_GREEN_MIN"] = QColor(130, 230, 130, 100);
     colorMap["SOLID_RED"]       = QColor(240, 10, 10);
     colorMap["YELLOW"]          = QColor(255, 200, 0);
     colorMap["SOLID_ORANGE"]    = QColor(255, 100, 30);
     colorMap["SOLID_BLUE"]      = QColor(10, 10, 240);
-    colorMap["MAGENTA"]         = QColor(120, 0, 140,100);
-
+    colorMap["MAGENTA"]         = QColor(120, 0, 140, 100);
   }
-  // This function must only be called after geotiffMapIm is initialized!
-  void GeotiffCreator::createBackgroundIm() {
 
+  // This function must only be called after geotiffMapIm is initialized!
+  void GeotiffCreator::createBackgroundIm()
+  {
     ROS_INFO("Creating BackGroundIm...");
 
-    geotiffBackgroundIm_= new QImage(geotiffMapIm_->width() + MAP_OFFSET, geotiffMapIm_->height() + MAP_OFFSET, QImage::Format_RGB32);
     QPainter geotiffPainter;
+    int width = geotiffMapIm_->width() + MAP_OFFSET;
+    int height = geotiffMapIm_->height() + MAP_OFFSET;
+
+    geotiffBackgroundIm_= new QImage(width, height, QImage::Format_RGB32);
     geotiffPainter.begin(geotiffBackgroundIm_);
 
     drawCheckers(CHECKER_SIZE, CHECKER_COLOR_LIGHT, CHECKER_COLOR_DARK, &geotiffPainter);
@@ -118,44 +123,52 @@ namespace pandora_geotiff {
     ROS_INFO("BackGroundIm was created succesfully...");
   }
 
-  void GeotiffCreator::saveGeotiff(std::string homeFolderString){
-
+  void GeotiffCreator::saveGeotiff(std::string homeFolderString)
+  {
     ROS_INFO("Saving Geotiff...");
 
     passwd* pw = getpwuid(getuid());
     std::string path(pw->pw_dir);
+
     path.append(homeFolderString);
     path.append(missionNamePrefix_);
     path.append(missionName_);
     path.append(missionNameExtention_);
     mapInitialized_ = false;
 
-    if ((*geotiffBackgroundIm_).save(path.c_str())) {
+    if ((*geotiffBackgroundIm_).save(path.c_str()))
+    {
       ROS_INFO("Geotiff... was saved succesfully");
-    } else {
-      ROS_ERROR( "GEOTIFF DID NOT SAVE SUCCESFULLY (Check the path provided, and the user rights!)");
+    }
+    else
+    {
+      ROS_ERROR("GEOTIFF DID NOT SAVE SUCCESFULLY (Check the path provided, and the user rights!)");
     }
   }
 
-  void GeotiffCreator::setMissionName(std::string missionName) {
+  void GeotiffCreator::setMissionName(std::string missionName)
+  {
     missionName_= missionName;
   }
 
-  void GeotiffCreator::drawCheckers(const int& checkerSize,
-                                    const std::string& colorD,
-                                    const std::string& colorL,
+  void GeotiffCreator::drawCheckers(const int& checkerSize, const std::string& colorD, const std::string& colorL,
                                     QPainter* geotiffPainter)
   {
     ROS_INFO("Drawing Checkers...");
     QBrush gridBrush(colorMap[colorD]);
 
     // Draw (checkerboard) grid.
-    for (int i = 0; i < geotiffBackgroundIm_->width()/CHECKER_SIZE ; i++) {
-      for (int j = 0; j < geotiffBackgroundIm_->height()/CHECKER_SIZE ; j++) {
-        if ((j + i) % 2) {
+    for (int i = 0; i < geotiffBackgroundIm_->width() / CHECKER_SIZE; i++)
+    {
+      for (int j = 0; j < geotiffBackgroundIm_->height() / CHECKER_SIZE; j++)
+      {
+        if ((j + i) % 2)
+        {
           geotiffPainter->setPen(colorMap[colorD]);
           gridBrush.setColor(colorMap[colorD]);
-        } else {
+        }
+        else
+        {
           geotiffPainter->setPen(colorMap[colorL]);
           gridBrush.setColor(colorMap[colorL]);
         }
@@ -163,13 +176,10 @@ namespace pandora_geotiff {
         geotiffPainter->fillRect(i * CHECKER_SIZE, j * CHECKER_SIZE, CHECKER_SIZE, CHECKER_SIZE, gridBrush);
       }
     }
-
     ROS_INFO("Checkers were drawn succesfully!");
   }
 
-  void GeotiffCreator::drawMissionName(const Eigen::Vector2f& coords,
-                                       const std::string& color,
-                                       const int& width,
+  void GeotiffCreator::drawMissionName(const Eigen::Vector2f& coords, const std::string& color, const int& width,
                                        QPainter* geotiffPainter)
   {
     ROS_INFO("Drawing MissionName...");
@@ -189,8 +199,7 @@ namespace pandora_geotiff {
     ROS_INFO("MissionName was drawed succesfully");
   }
 
-  void GeotiffCreator::drawMapScale(const Eigen::Vector2f& coords,
-                                    const std::string& color, const int& width,
+  void GeotiffCreator::drawMapScale(const Eigen::Vector2f& coords, const std::string& color, const int& width,
                                     QPainter* geotiffPainter)
   {
     ROS_INFO("Drawing MapScale...");
@@ -222,9 +231,7 @@ namespace pandora_geotiff {
     ROS_INFO("MapScale was drawed succesfully!");
   }
 
-  void GeotiffCreator::drawMapOrientation(const Eigen::Vector2f& coords,
-                                          const std::string& color,
-                                          const int& width,
+  void GeotiffCreator::drawMapOrientation(const Eigen::Vector2f& coords, const std::string& color, const int& width,
                                           QPainter* geotiffPainter)
   {
     ROS_INFO("Drawing MapOrientation...");
@@ -235,8 +242,8 @@ namespace pandora_geotiff {
     geotiffPainter->setPen(Pen);
 
     QPoint pointY(coords.x() - CHECKER_SIZE, coords.y());
-    QPoint pointC(coords.x(),coords.y());
-    QPoint pointX(coords.x(),coords.y() - CHECKER_SIZE);
+    QPoint pointC(coords.x(), coords.y());
+    QPoint pointX(coords.x(), coords.y() - CHECKER_SIZE);
 
     geotiffPainter->drawLine(pointY, pointC);
     geotiffPainter->drawLine(pointC, pointX);
@@ -266,31 +273,31 @@ namespace pandora_geotiff {
     ROS_INFO("MapOrientation drawn succesfully!");
   }
 
-  Eigen::Vector2i  GeotiffCreator::transformFromMetersToGeotiffPos(const Eigen::Vector2f point) {
-
-    Eigen::Vector2i tempPoint(point.y()*CHECKER_SIZE-mapYoffset_ ,point.x()*CHECKER_SIZE -mapXoffset_);
-    Eigen::Vector2i newPoint(geotiffMapIm_->width() -tempPoint.x() -trimmingXoffset_,geotiffMapIm_->height() -tempPoint.y() -trimmingYoffset_);
-
+  Eigen::Vector2i  GeotiffCreator::transformFromMetersToGeotiffPos(const Eigen::Vector2f point)
+  {
+    Eigen::Vector2i tempPoint((point.y() * CHECKER_SIZE) - mapYoffset_, (point.x() * CHECKER_SIZE) - mapXoffset_);
+    Eigen::Vector2i newPoint(geotiffMapIm_->width() - tempPoint.x() - trimmingXoffset_,
+        geotiffMapIm_->height() - tempPoint.y() - trimmingYoffset_);
     return newPoint;
   }
 
-  void GeotiffCreator::drawMap(const nav_msgs::OccupancyGrid& map,
-                               const std::string& color, const int& bottomThres,
+  void GeotiffCreator::drawMap(const nav_msgs::OccupancyGrid& map, const std::string& color, const int& bottomThres,
                                const int& topThres, const int& grid_space)
   {
     ROS_INFO("A map drawing was requested");
 
-    int xRsize = int((map.info.height / CHECKER_SIZE) * CHECKER_SIZE) + CHECKER_SIZE;
-    int yRsize = int((map.info.width / CHECKER_SIZE) * CHECKER_SIZE) + CHECKER_SIZE;
+    int xRsize = static_cast<int>((map.info.height / CHECKER_SIZE) * CHECKER_SIZE) + CHECKER_SIZE;
+    int yRsize = static_cast<int>((map.info.width / CHECKER_SIZE) * CHECKER_SIZE) + CHECKER_SIZE;
 
     int xsize = map.info.height;
     int ysize = map.info.width;
 
     QPainter* mapPainter = new QPainter();
 
-    if (not mapInitialized_) {
+    if (!mapInitialized_)
+    {
       geotiffMapRes_ = map.info.resolution;
-      CHECKER_SIZE =int(1 / geotiffMapRes_) ;
+      CHECKER_SIZE = static_cast<int>(1 / geotiffMapRes_);
 
       mapXoffset_ = map.info.origin.position.x*CHECKER_SIZE;
       mapYoffset_ = map.info.origin.position.y*CHECKER_SIZE;
@@ -298,7 +305,7 @@ namespace pandora_geotiff {
       trimmingXoffset_ = xRsize - xsize;
       trimmingYoffset_ = yRsize - ysize;
 
-      geotiffMapIm_ = new QImage(xRsize ,yRsize , QImage::Format_ARGB32);
+      geotiffMapIm_ = new QImage(xRsize, yRsize, QImage::Format_ARGB32);
       mapInitialized_ = true;
 
       mapPainter->begin(geotiffMapIm_);
@@ -306,23 +313,27 @@ namespace pandora_geotiff {
       mapPainter->fillRect(geotiffMapIm_->rect(), Qt::transparent);
       mapPainter->setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
-    else {
+    else
+    {
       mapPainter->begin(geotiffMapIm_);
     }
 
     QColor MapColor(colorMap[color]);
     QPen Pen = QPen(MapColor);
     mapPainter->setPen(Pen);
-    for (int i = 0; i < xsize; i++) {
-      for (int j = 0; j < ysize; j++) {
 
+    for (int i = 0; i < xsize; i++)
+    {
+      for (int j = 0; j < ysize; j++)
+      {
         if (bottomThres < map.data[xsize * ysize - j - i * ysize] &&
             topThres > map.data[xsize * ysize - j - i * ysize])
         {
           bool yGrid = !(j % (CHECKER_SIZE / 2));
           bool xGrid = !(i % (CHECKER_SIZE / 2));
 
-          if (grid_space && (xGrid or yGrid)) {
+          if (grid_space && (xGrid || yGrid))
+          {
             mapPainter->setPen(QPen(colorMap["WHITE_MIN"]));
           }
           // i,j MUST BE xsize and J must be y size if you want to swap y with x u must change a lot of things
@@ -335,8 +346,7 @@ namespace pandora_geotiff {
     ROS_INFO("Map was drawn succesfully.");
   }
 
-  void GeotiffCreator::drawPath(const std::vector<Eigen::Vector2f>& points,
-                                const std::string& color, const int& width)
+  void GeotiffCreator::drawPath(const std::vector<Eigen::Vector2f>& points, const std::string& color, const int& width)
   {
     ROS_INFO("A path drawing was requested.");
 
@@ -352,24 +362,20 @@ namespace pandora_geotiff {
     Eigen::Vector2i point1;
     Eigen::Vector2i point2;
 
-    for (int i = 0; i < points.size() - 1; i++) {
+    for (int i = 0; i < points.size() - 1; i++)
+    {
       point1 = transformFromMetersToGeotiffPos(points[i]);
       point2 = transformFromMetersToGeotiffPos(points[i + 1]);
       pathPainter->drawLine(point1.x(), point1.y(), point2.x(), point2.y());
     }
-
     pathPainter->end();
     ROS_INFO("Path was drawn succesfully.");
   }
 
-  void GeotiffCreator::drawObjectOfInterest(const Eigen::Vector2f& meterCoords,
-                                            const std::string& color,
-                                            const std::string& txtcolor,
-                                            const std::string& shape,
-                                            const std::string& txt,
-                                            const int& size)
+  void GeotiffCreator::drawObjectOfInterest(const Eigen::Vector2f& meterCoords, const std::string& color,
+                                            const std::string& txtcolor, const std::string& shape,
+                                            const std::string& txt, const int& size)
   {
-
     ROS_INFO("Object of shape %s requested", shape.c_str());
 
     QPainter* objectPainter = new QPainter();
@@ -384,46 +390,46 @@ namespace pandora_geotiff {
     QFont font;
     font.setPixelSize(rSize / 2);
 
-    if (shape == "DIAMOND") {
+    if (shape == "DIAMOND")
+    {
       QPoint points[4];
 
-      points[0] = QPoint(pixelCoords.x(), pixelCoords.y() + rSize / 2);
-      points[1] = QPoint(pixelCoords.x() + rSize / 2, pixelCoords.y());
-      points[2] = QPoint(pixelCoords.x(), pixelCoords.y() - rSize / 2);
-      points[3] = QPoint(pixelCoords.x() - rSize / 2, pixelCoords.y());
+      points[0] = QPoint(pixelCoords.x(), pixelCoords.y() + (rSize / 2));
+      points[1] = QPoint(pixelCoords.x() + (rSize / 2), pixelCoords.y());
+      points[2] = QPoint(pixelCoords.x(), pixelCoords.y() - (rSize / 2));
+      points[3] = QPoint(pixelCoords.x() - (rSize / 2), pixelCoords.y());
 
       objectPainter->drawPolygon(points, 4);
       objectPainter->setPen(Pen);
       objectPainter->setFont(font);
-      objectPainter->drawText(pixelCoords.x() - rSize / 2,
-                              pixelCoords.y() - rSize / 2 , rSize, rSize,
-                              Qt::AlignCenter,QString::fromStdString(txt));
-
-    } else if (shape == "CIRCLE") {
-      objectPainter->drawEllipse(QPoint(pixelCoords.x(), pixelCoords.y()),
-                                        rSize / 2, rSize / 2);
+      objectPainter->drawText(pixelCoords.x() - (rSize / 2), pixelCoords.y() - (rSize / 2), rSize, rSize,
+                              Qt::AlignCenter, QString::fromStdString(txt));
+    }
+    else if (shape == "CIRCLE")
+    {
+      objectPainter->drawEllipse(QPoint(pixelCoords.x(), pixelCoords.y()), rSize / 2, rSize / 2);
       objectPainter->setFont(font);
       objectPainter->setPen(Pen);
-      objectPainter->drawText(pixelCoords.x() - rSize / 2,
-                              pixelCoords.y() - rSize / 2, rSize, rSize,
-                              Qt::AlignCenter,QString::fromStdString(txt));
-
-    } else if (shape == "ARROW") {
+      objectPainter->drawText(pixelCoords.x() - (rSize / 2), pixelCoords.y() - (rSize / 2), rSize, rSize,
+                              Qt::AlignCenter, QString::fromStdString(txt));
+    }
+    else if (shape == "ARROW")
+    {
       QPoint points[4];
 
-      points[0] = QPoint(pixelCoords.x(), pixelCoords.y() - 3 * rSize);
-      points[1] = QPoint(pixelCoords.x() + rSize, pixelCoords.y() + 2 * rSize);
+      points[0] = QPoint(pixelCoords.x(), pixelCoords.y() - (3 * rSize));
+      points[1] = QPoint(pixelCoords.x() + rSize, pixelCoords.y() + (2 * rSize));
       points[2] = QPoint(pixelCoords.x(), pixelCoords.y() + rSize);
-      points[3] = QPoint(pixelCoords.x() - rSize, pixelCoords.y() + 2 * rSize);
+      points[3] = QPoint(pixelCoords.x() - rSize, pixelCoords.y() + (2 * rSize));
 
       objectPainter->drawPolygon(points, 4);
-
-    } else {
+    }
+    else
+    {
       ROS_WARN("This shape is not supported.");
     }
-
     objectPainter->end();
     ROS_INFO("Drawing Object of shape %s completed.", shape.c_str());
   }
-}//namespace pandora_geotiff
+}  // namespace pandora_geotiff
 

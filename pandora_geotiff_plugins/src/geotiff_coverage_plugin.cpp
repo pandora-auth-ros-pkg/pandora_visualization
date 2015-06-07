@@ -46,11 +46,11 @@
 #include <pandora_geotiff/map_writer_plugin_interface.h>
 
 
-namespace pandora_geotiff_plugins {
-
-  class CoverageWriter : public pandora_geotiff::MapWriterPluginInterface {
+namespace pandora_geotiff_plugins
+{
+  class CoverageWriter : public pandora_geotiff::MapWriterPluginInterface
+  {
     public:
-
       CoverageWriter();
       virtual ~CoverageWriter();
 
@@ -59,7 +59,6 @@ namespace pandora_geotiff_plugins {
       void getGeotiffDataCoverage(nav_msgs::OccupancyGrid map);
 
     protected:
-
       ros::NodeHandle nh_;
       ros::Subscriber sub_coverage;
       std::string coverage_topic_name_;
@@ -68,7 +67,6 @@ namespace pandora_geotiff_plugins {
       std::string name_;
 
     private:
-
       nav_msgs::OccupancyGrid coverage;
       bool gotData;
       std::string COVERAGE_COLOR;
@@ -80,8 +78,8 @@ namespace pandora_geotiff_plugins {
 
   CoverageWriter::~CoverageWriter() {}
 
-  void CoverageWriter::initialize(const std::string& name) {
-
+  void CoverageWriter::initialize(const std::string& name)
+  {
     ros::NodeHandle plugin_nh("~/" + name);
     plugin_nh.param("pandora_geotiff_node/published_topic_names/coverage_map", coverage_topic_name_,
                     std::string("/data_fusion/sensor_coverage/kinect_space"));
@@ -96,14 +94,16 @@ namespace pandora_geotiff_plugins {
     ROS_INFO_NAMED(name_, "Successfully initialized pandora_geotiff CoverageWriter plugin %s.", name_.c_str());
   }
 
-  void CoverageWriter::getGeotiffDataCoverage(nav_msgs::OccupancyGrid coverage) {
+  void CoverageWriter::getGeotiffDataCoverage(nav_msgs::OccupancyGrid coverage)
+  {
     this->coverage = coverage;
     gotData = true;
   }
 
-  void CoverageWriter::draw(pandora_geotiff::MapWriterInterface *interface) {
-
-    if (!initialized_ || !gotData) {
+  void CoverageWriter::draw(pandora_geotiff::MapWriterInterface *interface)
+  {
+    if (!initialized_ || !gotData)
+    {
       ROS_WARN_NAMED("CoverageWriter",
           "CoverageWriterplugin not initilized or no data has been received /n ABORTING DRAWING..");
       return;
@@ -120,5 +120,5 @@ namespace pandora_geotiff_plugins {
 PLUGINLIB_EXPORT_CLASS(pandora_geotiff_plugins::CoverageWriter, pandora_geotiff::MapWriterPluginInterface)
 #else
 PLUGINLIB_DECLARE_CLASS(pandora_geotiff_plugins, CoverageWriter, pandora_geotiff_plugins::CoverageWriter,
-                        pandora_geotiff::MapWriterPluginInterface)
+    pandora_geotiff::MapWriterPluginInterface)
 #endif

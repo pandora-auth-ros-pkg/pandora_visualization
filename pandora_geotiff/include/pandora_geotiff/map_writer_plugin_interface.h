@@ -35,12 +35,11 @@
 #include "pandora_geotiff/map_creator_interface.h"
 
 
-namespace pandora_geotiff {
-
-  class MapWriterPluginInterface {
-
+namespace pandora_geotiff
+{
+  class MapWriterPluginInterface
+  {
     public:
-
       virtual void initialize(const std::string& name) = 0;
       virtual void draw(MapWriterInterface* map_writer_interface) = 0;
       virtual ~MapWriterPluginInterface() {};

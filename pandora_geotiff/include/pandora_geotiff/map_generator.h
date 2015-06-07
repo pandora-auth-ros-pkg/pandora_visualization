@@ -58,12 +58,11 @@
 #include "pandora_geotiff/qr_csv_creator.h"
 
 
-namespace pandora_geotiff {
-
-  class MapGenerator {
-
+namespace pandora_geotiff
+{
+  class MapGenerator
+  {
     private:
-
       GeotiffCreator* geotiffCreator;
       QrCsvCreator* qrCsvCreator;
       std::string p_plugin_list_;
@@ -73,14 +72,12 @@ namespace pandora_geotiff {
       pluginlib::ClassLoader<MapWriterPluginInterface>* plugin_loader_;
 
     public:
-
       MapGenerator();
       ~MapGenerator();
 
       void writeGeotiff(const std::string& missionName);
       bool saveGeotiff(SaveMission::Request& req, SaveMission::Response& res);
   };
-
 }  // namespace pandora_geotiff
 
 #endif  // PANDORA_GEOTIFF_MAP_GENERATOR_H

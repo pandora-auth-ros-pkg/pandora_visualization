@@ -54,12 +54,14 @@ std::vector<geometry_msgs::PoseStamped> hazmats_;
 bool data_fusion_geotiff(const pandora_data_fusion_msgs::GeotiffSrv::Request &req,
                          const pandora_data_fusion_msgs::GeotiffSrv::Response &res)
 {
-
-  if (ros::service::exists("data_fusion/get_objects", true)) {
+  if (ros::service::exists("data_fusion/get_objects", true))
+  {
     res.victims = victims_;
     res.hazmats = hazmats_;
     res.qrs = qrs_;
-  } else {
+  }
+  else
+  {
     geometry_msgs::PoseStamped victim1;
     geometry_msgs::PoseStamped hazmat1;
     geometry_msgs::PoseStamped qr1;
@@ -125,7 +127,8 @@ bool data_fusion_geotiff(const pandora_data_fusion_msgs::GeotiffSrv::Request &re
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   ros::init(argc, argv, "DataFusionSrvMock");
   ros::NodeHandle n;
 
@@ -134,12 +137,15 @@ int main(int argc, char **argv) {
   pandora_data_fusion_msgs::GetObjectsSrv srv;
 
   // TODO(chamzask): call service each time
-  if (client.call(srv)) {
+  if (client.call(srv))
+  {
     victims_ = srv.response.victimsToGo;
     qrs_ = srv.response.qrs;
     hazmats_ =srv.response.hazmats;
     ROS_INFO("Called succesfully Real Data fusion");
-  } else {
+  }
+  else
+  {
     ROS_INFO("Failed to call service get_Objects_calling Mocks...");
   }
 

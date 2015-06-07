@@ -45,12 +45,11 @@
 #include <pandora_geotiff/map_writer_plugin_interface.h>
 
 
-namespace pandora_geotiff_plugins {
-
-  class MapWriter : public pandora_geotiff::MapWriterPluginInterface {
-
+namespace pandora_geotiff_plugins
+{
+  class MapWriter : public pandora_geotiff::MapWriterPluginInterface
+  {
     public:
-
       MapWriter();
       virtual ~MapWriter();
 
@@ -59,7 +58,6 @@ namespace pandora_geotiff_plugins {
       void getGeotiffDataMap(nav_msgs::OccupancyGrid map);
 
     protected:
-
       ros::NodeHandle nh_;
       ros::Subscriber map_sub;
 
@@ -67,7 +65,6 @@ namespace pandora_geotiff_plugins {
       std::string name_;
 
     private:
-
       nav_msgs::OccupancyGrid map;
       bool gotData;
       int MAP_BOT_THRES;
@@ -82,8 +79,8 @@ namespace pandora_geotiff_plugins {
 
   MapWriter::~MapWriter() {}
 
-  void MapWriter::initialize(const std::string& name) {
-
+  void MapWriter::initialize(const std::string& name)
+  {
     ros::NodeHandle plugin_nh("~/" + name);
     std::string map_topic_name_;
 
@@ -102,14 +99,16 @@ namespace pandora_geotiff_plugins {
     ROS_INFO_NAMED(name_, "Successfully initialized pandora_geotiff MapWriter plugin %s.", name_.c_str());
   }
 
-  void MapWriter::getGeotiffDataMap(nav_msgs::OccupancyGrid map) {
+  void MapWriter::getGeotiffDataMap(nav_msgs::OccupancyGrid map)
+  {
     this->map = map;
     gotData = true;
   }
 
-  void MapWriter::draw(pandora_geotiff::MapWriterInterface *interface) {
-
-    if (!initialized_ || !gotData) {
+  void MapWriter::draw(pandora_geotiff::MapWriterInterface *interface)
+  {
+    if (!initialized_ || !gotData)
+    {
       ROS_WARN_NAMED("MapWriter",
           "plugin not initialized or no data has been received /n ABORTING DRAWING..");
       return;

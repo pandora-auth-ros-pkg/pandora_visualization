@@ -53,12 +53,11 @@
 #include "pandora_geotiff/map_creator_interface.h"
 
 
-namespace pandora_geotiff {
-
-  class GeotiffCreator : public MapWriterInterface {
-
+namespace pandora_geotiff
+{
+  class GeotiffCreator : public MapWriterInterface
+  {
     public:
-
       /**
        * @brief GeotiffCreator constructor
        */
@@ -94,26 +93,16 @@ namespace pandora_geotiff {
 
       void setMissionName(std::string missionName);
 
+      virtual void drawMap(const nav_msgs::OccupancyGrid& map, const std::string& color, const int& bottomThres,
+                           const int& topThres, const int& grid_space = 0);
 
-      virtual void drawMap(const nav_msgs::OccupancyGrid& map,
-                           const std::string& color,
-                           const int& bottomThres,
-                           const int& topThres,
-                           const int& grid_space = 0);
-
-      virtual void drawObjectOfInterest(const Eigen::Vector2f& coords,
-                                        const std::string& color,
-                                        const std::string& txtcolor,
-                                        const std::string& shape,
-                                        const std::string& txt,
+      virtual void drawObjectOfInterest(const Eigen::Vector2f& coords, const std::string& color,
+                                        const std::string& txtcolor, const std::string& shape, const std::string& txt,
                                         const int& size);
 
-      virtual void drawPath(const std::vector<Eigen::Vector2f>& points,
-                            const std::string& color,
-                            const int& width);
+      virtual void drawPath(const std::vector<Eigen::Vector2f>& points, const std::string& color, const int& width);
 
     private:
-
       void geotiffTimerCb(const ros::TimerEvent& event);
 
       /**
@@ -126,8 +115,8 @@ namespace pandora_geotiff {
        * @return void
        */
 
-      void drawCheckers(const int& checkerSize, const std::string& colorD,
-                        const std::string& colorL, QPainter* geotiffPainter);
+      void drawCheckers(const int& checkerSize, const std::string& colorD, const std::string& colorL,
+                        QPainter* geotiffPainter);
 
       /**
        * @brief Draws the missionName with a specific color in a specific point.
@@ -139,9 +128,8 @@ namespace pandora_geotiff {
        * @return void
        */
 
-      void drawMissionName(const Eigen::Vector2f& coords,
-                           const std::string& color,
-                           const int& width, QPainter* geotiffPainter);
+      void drawMissionName(const Eigen::Vector2f& coords, const std::string& color, const int& width,
+                           QPainter* geotiffPainter);
       /**
        * @brief Draws the mapScale with a specific color in a specific point.
        *
@@ -153,8 +141,7 @@ namespace pandora_geotiff {
        * @return void
        */
 
-      void drawMapScale(const Eigen::Vector2f& coords,
-                        const std::string& color,
+      void drawMapScale(const Eigen::Vector2f& coords, const std::string& color,
                         const int& width, QPainter* geotiffPainter);
 
       /**
@@ -168,8 +155,7 @@ namespace pandora_geotiff {
        * @return void
        */
 
-      void drawMapOrientation(const Eigen::Vector2f& coords,
-                              const std::string& color,
+      void drawMapOrientation(const Eigen::Vector2f& coords, const std::string& color,
                               const int& width, QPainter* geotiffPainter);
 
       Eigen::Vector2i  transformFromMetersToGeotiffPos(const Eigen::Vector2f point);
@@ -231,7 +217,6 @@ namespace pandora_geotiff {
       Eigen::Vector2f MAP_SCALE_COORDS;
       Eigen::Vector2f MAP_ORIENTATION_COORDS;
   };
-
 }  // namespace pandora_geotiff
 
 #endif  // PANDORA_GEOTIFF_GEOTIFF_CREATOR_H

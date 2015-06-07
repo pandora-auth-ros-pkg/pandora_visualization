@@ -70,12 +70,12 @@ target_link_libraries(pandora_geotiff_node
 ############################## ROSLINT ##############################
 
 set(ROSLINT_CPP_OPTS
-    "--filter=-whitespace/braces, -whitespace/blank_line, -runtime/references")
+    "--filter=-runtime/references, -runtime/threadsafe_fn")
 
 FILE(GLOB_RECURSE ${PROJECT_NAME}_LINT_SRCS
             ${PROJECT_SOURCE_DIR}
             include/**/*.h
-            src/**/*.cpp
+            src/*.cpp
             test/**/*.cpp
         )
 

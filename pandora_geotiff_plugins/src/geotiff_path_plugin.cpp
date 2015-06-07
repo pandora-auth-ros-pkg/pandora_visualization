@@ -47,11 +47,11 @@
 #include <pandora_geotiff/map_writer_plugin_interface.h>
 
 
-namespace pandora_geotiff_plugins {
-
-  class PathWriter : public pandora_geotiff::MapWriterPluginInterface {
+namespace pandora_geotiff_plugins
+{
+  class PathWriter : public pandora_geotiff::MapWriterPluginInterface
+  {
     public:
-
       PathWriter();
       virtual ~PathWriter();
 
@@ -60,7 +60,6 @@ namespace pandora_geotiff_plugins {
       void getRobotTrajectoryData(nav_msgs::Path robotPath);
 
     protected:
-
       ros::NodeHandle nh_;
       ros::Subscriber path_sub;
 
@@ -68,7 +67,6 @@ namespace pandora_geotiff_plugins {
       std::string name_;
 
     private:
-
       bool gotData;
       nav_msgs::Path robotPath;
       std::string PATH_COLOR;
@@ -82,8 +80,8 @@ namespace pandora_geotiff_plugins {
 
   PathWriter::~PathWriter() {}
 
-  void PathWriter::initialize(const std::string& name) {
-
+  void PathWriter::initialize(const std::string& name)
+  {
     ros::NodeHandle plugin_nh("~/" + name);
     std::string path_topic_name;
 
@@ -99,19 +97,21 @@ namespace pandora_geotiff_plugins {
     ROS_INFO_NAMED(name_, "Successfully initialized pandora_geotiff PathWriter plugin %s.", name_.c_str());
   }
 
-  void PathWriter::getRobotTrajectoryData(nav_msgs::Path robotPath) {
+  void PathWriter::getRobotTrajectoryData(nav_msgs::Path robotPath)
+  {
     this->robotPath = robotPath;
     ROS_INFO("_PATH_DATA_RECEIVED");
     gotData = true;
   }
 
-  void PathWriter::draw(pandora_geotiff::MapWriterInterface *interface) {
-    if (!initialized_ || !gotData) {
+  void PathWriter::draw(pandora_geotiff::MapWriterInterface *interface)
+  {
+    if (!initialized_ || !gotData)
+    {
       ROS_WARN_NAMED("PathWriter",
           "PathWriter plugin not initilized or no data has been received /n ABORTING DRAWING..");
       return;
     }
-
     ROS_INFO("DRAWING THE AWESOME PATH");
 
     std::vector<geometry_msgs::PoseStamped>& path_vector(robotPath.poses);
@@ -123,12 +123,14 @@ namespace pandora_geotiff_plugins {
 
     ROS_INFO("Robot path Size %ld ", size);
 
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i)
+    {
       const geometry_msgs::PoseStamped& pose(path_vector[i]);
       pointVec[i] = Eigen::Vector2f(pose.pose.position.x, pose.pose.position.y);
     }
 
-    if (size > 0) {
+    if (size > 0)
+    {
       interface->drawPath(pointVec, PATH_COLOR, PATH_WIDTH);
       interface->drawObjectOfInterest(pointVec[0], ARROW_COLOR, "irelevant", "ARROW", "irelavant", ARROW_SIZE);
     }

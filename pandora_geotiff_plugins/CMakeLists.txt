@@ -49,9 +49,6 @@ install(FILES
 
 ############################## ROSLINT ##############################
 
-set(ROSLINT_CPP_OPTS
-      "--filter=-whitespace/blank_line, -whitespace/braces")
-
 FILE(GLOB_RECURSE ${PROJECT_NAME}_LINT_SRCS
             ${PROJECT_SOURCE_DIR}
             include/**/*.h

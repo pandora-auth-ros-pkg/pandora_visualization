@@ -53,17 +53,15 @@
 #include "pandora_data_fusion_msgs/QrCsvSrv.h"
 
 
-namespace pandora_geotiff {
-
-  class QrCsvCreator {
-
+namespace pandora_geotiff
+{
+  class QrCsvCreator
+  {
     public:
-
       QrCsvCreator();
       void generateQrCsv(std::string missionName);
 
     private:
-
       bool gotData_;
       std::string missionNamePrefix_;
       std::string getDateAndTime();
@@ -72,7 +70,6 @@ namespace pandora_geotiff {
 
       void getQrsData();
   };
-
 }  // namespace pandora_geotiff
 
 #endif  // PANDORA_GEOTIFF_QR_CSV_CREATOR_H
