@@ -52,6 +52,7 @@ namespace pandora_geotiff {
 
     // We always have at least one element containing "" in the string list.
     if ((plugin_list.size() > 0) && (plugin_list[0].length() > 0)) {
+
       plugin_loader_ = new pluginlib::ClassLoader<MapWriterPluginInterface>(
           "pandora_geotiff", "pandora_geotiff::MapWriterPluginInterface");
 
@@ -89,10 +90,12 @@ namespace pandora_geotiff {
     geotiffCreator->saveGeotiff();
   }
 
-  bool MapGenerator::saveGeotiff(SaveMission::Request& req, SaveMission::Response& res) {
+  bool MapGenerator::saveGeotiff(SaveMission::Request& req,
+                                 SaveMission::Response& res)
+  {
     ROS_INFO("SaveMission service was requested.");
 
     this->writeGeotiff(std::string(req.SaveMisionFileName.data));
     return true;
   }
-} // namespace pandora_geotiff
+}  // namespace pandora_geotiff

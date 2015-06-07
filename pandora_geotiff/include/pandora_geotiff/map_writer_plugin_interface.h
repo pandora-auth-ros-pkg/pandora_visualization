@@ -26,10 +26,13 @@
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //=================================================================================================
 
-#ifndef MAP_WRITER_PLUGIN_INTERFACE_H
-#define MAP_WRITER_PLUGIN_INTERFACE_H
+#ifndef PANDORA_GEOTIFF_MAP_WRITER_PLUGIN_INTERFACE_H
+#define PANDORA_GEOTIFF_MAP_WRITER_PLUGIN_INTERFACE_H
 
-#include "map_creator_interface.h"
+
+#include <string>
+
+#include "pandora_geotiff/map_creator_interface.h"
 
 
 namespace pandora_geotiff {
@@ -41,9 +44,7 @@ namespace pandora_geotiff {
       virtual void initialize(const std::string& name) = 0;
       virtual void draw(MapWriterInterface* map_writer_interface) = 0;
       virtual ~MapWriterPluginInterface() {};
-
   };
+}  // namespace pandora_geotiff
 
-} //namespace pandora_geotiff
-
-#endif
+#endif  // PANDORA_GEOTIFF_MAP_WRITER_PLUGIN_INTERFACE_H

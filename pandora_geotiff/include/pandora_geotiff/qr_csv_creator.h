@@ -37,15 +37,18 @@
  *********************************************************************/
 
 
-#ifndef QR_CSV_CREATOR_H
-#define QR_CSV_CREATOR_H
+#ifndef PANDORA_GEOTIFF_QR_CSV_CREATOR_H
+#define PANDORA_GEOTIFF_QR_CSV_CREATOR_H
 
 #include <stdlib.h>
-#include <ros/ros.h>
+#include <vector>
+#include <string>
 #include <pwd.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
+
+#include <ros/ros.h>
 
 #include "pandora_data_fusion_msgs/QrCsvSrv.h"
 
@@ -69,8 +72,9 @@ namespace pandora_geotiff {
 
       void getQrsData();
   };
-}
 
-#endif
+}  // namespace pandora_geotiff
+
+#endif  // PANDORA_GEOTIFF_QR_CSV_CREATOR_H
 
 

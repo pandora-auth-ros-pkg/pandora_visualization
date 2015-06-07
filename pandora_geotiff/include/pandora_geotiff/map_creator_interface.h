@@ -36,10 +36,13 @@
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
 
-#ifndef MAP_CREATOR_INTERFACE_H
-#define MAP_CREATOR_INTERFACE_H
+#ifndef PANDORA_GEOTIFF_MAP_CREATOR_INTERFACE_H
+#define PANDORA_GEOTIFF_MAP_CREATOR_INTERFACE_H
+
 
 #include <vector>
+#include <string>
+
 #include <Eigen/Core>
 #include <nav_msgs/OccupancyGrid.h>
 
@@ -74,7 +77,7 @@ namespace pandora_geotiff {
 
       virtual void drawMap(const nav_msgs::OccupancyGrid& map,
                            const std::string& color, const int& bottomThres,
-                           const int& topThres, const int& grid_space = 0 ) = 0;
+                           const int& topThres, const int& grid_space = 0) = 0;
       /**
        * @brief Draws an object with a specific color and a specific shape.
        * @details possible shapes {Diamond, Circle, Initial Arrow}
@@ -92,7 +95,7 @@ namespace pandora_geotiff {
                                         const std::string& color,
                                         const std::string& txtcolor,
                                         const std::string& shape,
-                                        const std::string& txt ,
+                                        const std::string& txt,
                                         const int& size) = 0;
       /**
        * @brief Draws a trajectory of a specified color.
@@ -110,6 +113,6 @@ namespace pandora_geotiff {
       virtual ~MapWriterInterface() {};
   };
 
-} //namespace pandora_geotiff
+}  // namespace pandora_geotiff
 
-#endif
+#endif  // PANDORA_GEOTIFF_MAP_CREATOR_INTERFACE_H

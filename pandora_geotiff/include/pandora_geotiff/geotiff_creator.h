@@ -36,16 +36,18 @@
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
 
-#ifndef GEOTIFF_CREATOR_H
-#define GEOTIFF_CREATOR_H
+#ifndef PANDORA_GEOTIFF_GEOTIFF_CREATOR_H
+#define PANDORA_GEOTIFF_GEOTIFF_CREATOR_H
 
+#include <vector>
+#include <map>
+#include <string>
+#include <sys/types.h>
 
 #include <QtGui>
 #include <QAction>
 #include <unistd.h>
-#include <sys/types.h>
 #include <pwd.h>
-#include <string>
 
 #include "ros/ros.h"
 #include "pandora_geotiff/map_creator_interface.h"
@@ -124,8 +126,8 @@ namespace pandora_geotiff {
        * @return void
        */
 
-      void drawCheckers (const int& checkerSize, const std::string& colorD,
-                         const std::string& colorL, QPainter* geotiffPainter);
+      void drawCheckers(const int& checkerSize, const std::string& colorD,
+                        const std::string& colorL, QPainter* geotiffPainter);
 
       /**
        * @brief Draws the missionName with a specific color in a specific point.
@@ -173,7 +175,7 @@ namespace pandora_geotiff {
       Eigen::Vector2i  transformFromMetersToGeotiffPos(const Eigen::Vector2f point);
 
       //!< A Map that correlates all the colors name to string Colors.
-      std::map<std::string,QColor> colorMap;
+      std::map<std::string, QColor> colorMap;
 
       // I declare these as pointers in case the are moved in another class.
 
@@ -206,8 +208,8 @@ namespace pandora_geotiff {
       int mapXoffset_;
       int mapYoffset_;
 
-      int trimmingXoffset_ ;
-      int trimmingYoffset_ ;
+      int trimmingXoffset_;
+      int trimmingYoffset_;
 
       float geotiffMapRes_;
       bool mapInitialized_;
@@ -230,6 +232,6 @@ namespace pandora_geotiff {
       Eigen::Vector2f MAP_ORIENTATION_COORDS;
   };
 
-}// namespace pandora_geotiff
+}  // namespace pandora_geotiff
 
-#endif
+#endif  // PANDORA_GEOTIFF_GEOTIFF_CREATOR_H

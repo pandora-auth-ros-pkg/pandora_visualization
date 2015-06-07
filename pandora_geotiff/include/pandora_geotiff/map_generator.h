@@ -36,10 +36,13 @@
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
 
-#ifndef MAP_GENERATOR_H
-#define MAP_GENERATOR_H
+#ifndef PANDORA_GEOTIFF_MAP_GENERATOR_H
+#define PANDORA_GEOTIFF_MAP_GENERATOR_H
 
 #include <cstdio>
+#include <vector>
+#include <string>
+
 #include <ros/ros.h>
 #include <ros/console.h>
 #include <pluginlib/class_loader.h>
@@ -78,6 +81,6 @@ namespace pandora_geotiff {
       bool saveGeotiff(SaveMission::Request& req, SaveMission::Response& res);
   };
 
-} //namespace pandora_geotiff
+}  // namespace pandora_geotiff
 
-#endif
+#endif  // PANDORA_GEOTIFF_MAP_GENERATOR_H

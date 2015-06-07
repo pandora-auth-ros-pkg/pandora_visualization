@@ -36,8 +36,9 @@
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
 
-#include "gtest/gtest.h"
+#include <vector>
 #include <ros/package.h>
+#include "gtest/gtest.h"
 
 #include "pandora_testing_tools/map_loader/map_loader.h"
 #include "pandora_geotiff/geotiff_creator.h"
@@ -56,8 +57,8 @@ namespace pandora_geotiff {
 
         points.resize(250);
 
-        for (int i = 0; i< 251; i++ ) {
-          points[i] = Eigen::Vector2f(i/10,i/10);
+        for (int i = 0; i < 251; i++) {
+          points[i] = Eigen::Vector2f(i / 10, i / 10);
         }
       }
 
@@ -67,19 +68,18 @@ namespace pandora_geotiff {
   };
 
   TEST_F(GeotiffCreatorTest, createBackgroundIm) {
-    gc.drawMap(map,"WHITE_MAX",-5,5,1);
-    gc.drawMap(map,"MAGENTA",80,110,0);
-    gc.drawPath(points,"SOLID_ORANGE",3);
-    gc.drawObjectOfInterest(Eigen::Vector2f(0,0),"BLACK","HELEANA","WHITE","5",20);
-    gc.drawObjectOfInterest(Eigen::Vector2f(4,3),"SOLID_RED","WHITE_MAX","DIAMOND","5",50);
-    gc.drawObjectOfInterest(Eigen::Vector2f(7,6),"SOLID_BLUE","WHITE_MAX","CIRCLE","5",30);
-    gc.drawObjectOfInterest(Eigen::Vector2f(6,7),"SOLID_BLUE","WHITE_MAX","CIRCLE","5",30);
-    gc.drawObjectOfInterest(Eigen::Vector2f(6,6),"MAGENTA","WHITE_MAX","CIRCLE","5",30);
-    gc.drawObjectOfInterest(Eigen::Vector2f(0,0),"YELLOW","WHITE","ARROW","5",30);
-    gc.drawObjectOfInterest(Eigen::Vector2f(1,1),"YELLOW","WHITE","ARROW","5",10);
-    gc.drawObjectOfInterest(Eigen::Vector2f(10,10),"YELLOW","WHITE","ARROW","5",10);
+    gc.drawMap(map, "WHITE_MAX", -5, 5, 1);
+    gc.drawMap(map, "MAGENTA", 80, 110, 0);
+    gc.drawPath(points, "SOLID_ORANGE", 3);
+    gc.drawObjectOfInterest(Eigen::Vector2f(0, 0), "BLACK", "HELEANA", "WHITE", "5", 20);
+    gc.drawObjectOfInterest(Eigen::Vector2f(4, 3), "SOLID_RED", "WHITE_MAX", "DIAMOND", "5", 50);
+    gc.drawObjectOfInterest(Eigen::Vector2f(7, 6), "SOLID_BLUE", "WHITE_MAX", "CIRCLE", "5", 30);
+    gc.drawObjectOfInterest(Eigen::Vector2f(6, 7), "SOLID_BLUE", "WHITE_MAX", "CIRCLE", "5", 30);
+    gc.drawObjectOfInterest(Eigen::Vector2f(6, 6), "MAGENTA", "WHITE_MAX", "CIRCLE", "5", 30);
+    gc.drawObjectOfInterest(Eigen::Vector2f(0, 0), "YELLOW", "WHITE", "ARROW", "5", 30);
+    gc.drawObjectOfInterest(Eigen::Vector2f(1, 1), "YELLOW", "WHITE", "ARROW", "5", 10);
+    gc.drawObjectOfInterest(Eigen::Vector2f(10, 10), "YELLOW", "WHITE", "ARROW", "5", 10);
     gc.createBackgroundIm();
     gc.saveGeotiff();
   }
-
 }  // namespace pandora_geotiff

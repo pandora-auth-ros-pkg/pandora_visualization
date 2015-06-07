@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(pandora_geotiff)
-find_package(catkin REQUIRED COMPONENTS 
+find_package(catkin REQUIRED COMPONENTS
   cmake_modules
   pluginlib
   roscpp
+  roslint
   std_msgs
   message_generation
   tf
@@ -65,6 +66,22 @@ target_link_libraries(pandora_geotiff_node
       geotiff_creator
       qr_csv_creator
       )
+
+############################## ROSLINT ##############################
+
+set(ROSLINT_CPP_OPTS
+    "--filter=-whitespace/braces, -whitespace/blank_line, -runtime/references")
+
+FILE(GLOB_RECURSE ${PROJECT_NAME}_LINT_SRCS
+            ${PROJECT_SOURCE_DIR}
+            include/**/*.h
+            src/**/*.cpp
+            test/**/*.cpp
+        )
+
+roslint_cpp(${${PROJECT_NAME}_LINT_SRCS})
+
+############################## TESTING ##############################
 
 if(CATKIN_ENABLE_TESTING)
   add_subdirectory(test)
