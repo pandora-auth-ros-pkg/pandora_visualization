@@ -121,7 +121,7 @@ namespace pandora_geotiff_plugins
     std::vector<Eigen::Vector2f> pointVec;
     pointVec.resize(size);
 
-    ROS_INFO("Robot path Size %ld ", size);
+    ROS_INFO("Robot path Size %d ", size);
 
     for (size_t i = 0; i < size; ++i)
     {
