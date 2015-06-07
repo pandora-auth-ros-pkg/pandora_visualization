@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
   pluginlib
   nav_msgs
   tf
+  roslint
   pandora_geotiff
   pandora_data_fusion_msgs
 )
@@ -35,7 +36,7 @@ add_library(pandora_geotiff_plugins
   src/geotiff_objects_plugin.cpp
 )
 add_dependencies(pandora_geotiff_plugins   ${catkin_EXPORTED_TARGETS})
-target_link_libraries(pandora_geotiff_plugins 
+target_link_libraries(pandora_geotiff_plugins
   ${catkin_LIBRARIES}
 )
 
@@ -46,3 +47,16 @@ install(FILES
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
+############################## ROSLINT ##############################
+
+set(ROSLINT_CPP_OPTS
+      "--filter=-whitespace/blank_line, -whitespace/braces")
+
+FILE(GLOB_RECURSE ${PROJECT_NAME}_LINT_SRCS
+            ${PROJECT_SOURCE_DIR}
+            include/**/*.h
+            src/**/*.cpp
+            test/**/*.cpp
+        )
+
+roslint_cpp(${${PROJECT_NAME}_LINT_SRCS})

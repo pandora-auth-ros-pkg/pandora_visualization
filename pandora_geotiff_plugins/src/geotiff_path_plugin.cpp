@@ -35,118 +35,115 @@
  * Authors:
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
-#include <pandora_geotiff/map_creator_interface.h>
-#include <pandora_geotiff/map_writer_plugin_interface.h>
-#include <nav_msgs/Path.h>
+
+#include <string>
+#include <vector>
+
 #include <ros/ros.h>
+#include <nav_msgs/Path.h>
 #include <pluginlib/class_loader.h>
 
-
-namespace pandora_geotiff_plugins
-{
-
+#include <pandora_geotiff/map_creator_interface.h>
+#include <pandora_geotiff/map_writer_plugin_interface.h>
 
 
-class PathWriter : public pandora_geotiff::MapWriterPluginInterface
-{
-  public:
-    PathWriter();
-    virtual ~PathWriter();
-  
-    virtual void initialize(const std::string& name);
-    virtual void draw(pandora_geotiff::MapWriterInterface *interface);
-    void getRobotTrajectoryData(nav_msgs::Path robotPath);
-  
-  protected:
-    ros::NodeHandle nh_;
-    ros::Subscriber path_sub;
-  
-    bool initialized_;
-    std::string name_;
-  
+namespace pandora_geotiff_plugins {
+
+  class PathWriter : public pandora_geotiff::MapWriterPluginInterface {
+    public:
+
+      PathWriter();
+      virtual ~PathWriter();
+
+      virtual void initialize(const std::string& name);
+      virtual void draw(pandora_geotiff::MapWriterInterface *interface);
+      void getRobotTrajectoryData(nav_msgs::Path robotPath);
+
+    protected:
+
+      ros::NodeHandle nh_;
+      ros::Subscriber path_sub;
+
+      bool initialized_;
+      std::string name_;
+
     private:
-      
+
       bool gotData;
       nav_msgs::Path robotPath;
       std::string PATH_COLOR;
       std::string ARROW_COLOR;
       int ARROW_SIZE;
       int PATH_WIDTH;
-  
   };
 
-PathWriter::PathWriter()
-    : initialized_(false),gotData(false),PATH_COLOR("MAGENTA"), PATH_WIDTH(2), ARROW_COLOR("YELLOW"), ARROW_SIZE(7)
-{}
+  PathWriter::PathWriter() : initialized_(false), gotData(false), PATH_COLOR("MAGENTA"),
+                             PATH_WIDTH(2), ARROW_COLOR("YELLOW"), ARROW_SIZE(7) {}
 
-PathWriter::~PathWriter()
-{}
+  PathWriter::~PathWriter() {}
 
-void PathWriter::initialize(const std::string& name)
-{
-  ros::NodeHandle plugin_nh("~/" + name);
-  std::string path_topic_name;
+  void PathWriter::initialize(const std::string& name) {
 
-  plugin_nh.param("/pandora_geotiff_node/published_topic_names/trajectory", path_topic_name, std::string("/robot_trajectory"));
-  plugin_nh.param("/pandora_geotiff_node/arrow_params/color",ARROW_COLOR,std::string("DIAMOND"));
-  plugin_nh.param("/pandora_geotiff_node/arrow_params/size",ARROW_SIZE,20);
-  plugin_nh.param("/pandora_geotiff_node/path_params/color",PATH_COLOR,std::string("SOLID_ORANGE"));
-  plugin_nh.param("/pandora_geotiff_node/path_params/width",PATH_WIDTH,10);
-  path_sub = plugin_nh.subscribe(path_topic_name , 1000, &PathWriter::getRobotTrajectoryData,this);
-  initialized_ = true;
-  this->name_ = name;
-  ROS_INFO_NAMED(name_, "Successfully initialized pandora_geotiff PathWriter plugin %s.", name_.c_str());
-}
+    ros::NodeHandle plugin_nh("~/" + name);
+    std::string path_topic_name;
 
-void PathWriter::getRobotTrajectoryData(nav_msgs::Path robotPath)
-{
-  this->robotPath = robotPath;
-  ROS_INFO("_PATH_DATA_RECEIVED");
-  gotData = true;
+    plugin_nh.param("/pandora_geotiff_node/published_topic_names/trajectory", path_topic_name,
+                    std::string("/robot_trajectory"));
+    plugin_nh.param("/pandora_geotiff_node/arrow_params/color", ARROW_COLOR, std::string("DIAMOND"));
+    plugin_nh.param("/pandora_geotiff_node/arrow_params/size", ARROW_SIZE, 20);
+    plugin_nh.param("/pandora_geotiff_node/path_params/color", PATH_COLOR, std::string("SOLID_ORANGE"));
+    plugin_nh.param("/pandora_geotiff_node/path_params/width", PATH_WIDTH, 10);
+    path_sub = plugin_nh.subscribe(path_topic_name, 1000, &PathWriter::getRobotTrajectoryData, this);
+    initialized_ = true;
+    this->name_ = name;
+    ROS_INFO_NAMED(name_, "Successfully initialized pandora_geotiff PathWriter plugin %s.", name_.c_str());
+  }
+
+  void PathWriter::getRobotTrajectoryData(nav_msgs::Path robotPath) {
+    this->robotPath = robotPath;
+    ROS_INFO("_PATH_DATA_RECEIVED");
+    gotData = true;
+  }
+
+  void PathWriter::draw(pandora_geotiff::MapWriterInterface *interface) {
+    if (!initialized_ || !gotData) {
+      ROS_WARN_NAMED("PathWriter",
+          "PathWriter plugin not initilized or no data has been received /n ABORTING DRAWING..");
+      return;
     }
 
-  
-void PathWriter::draw(pandora_geotiff::MapWriterInterface *interface)
-{
-    if(!initialized_||!gotData)
-    {
-      ROS_WARN_NAMED("PathWriter","PathWriter plugin not initilized or no data has been received /n ABORTING DRAWING..");
-      return;
-      }
-    
     ROS_INFO("DRAWING THE AWESOME PATH");
-    
+
     std::vector<geometry_msgs::PoseStamped>& path_vector(robotPath.poses);
 
     size_t size = path_vector.size();
 
     std::vector<Eigen::Vector2f> pointVec;
     pointVec.resize(size);
-    
+
     ROS_INFO("Robot path Size %ld ", size);
-    
 
-    for (size_t i = 0; i < size; ++i){
-      const geometry_msgs::PoseStamped& pose (path_vector[i]);
-
+    for (size_t i = 0; i < size; ++i) {
+      const geometry_msgs::PoseStamped& pose(path_vector[i]);
       pointVec[i] = Eigen::Vector2f(pose.pose.position.x, pose.pose.position.y);
     }
-    
-    if (size > 0){
 
-      interface->drawPath(pointVec,PATH_COLOR,PATH_WIDTH);
-      interface->drawObjectOfInterest(pointVec[0],ARROW_COLOR,"irelevant","ARROW","irelavant",ARROW_SIZE);
+    if (size > 0) {
+      interface->drawPath(pointVec, PATH_COLOR, PATH_WIDTH);
+      interface->drawObjectOfInterest(pointVec[0], ARROW_COLOR, "irelevant", "ARROW", "irelavant", ARROW_SIZE);
     }
+
     ROS_INFO("DRAWED A PATH SUCCESFULLY");
-    
-}
+  }
 
-} // namespace
+}  // namespace pandora_geotiff_plugins
 
-//register this planner as a MapWriterPluginInterface plugin
+// Register this planner as a MapWriterPluginInterface plugin.
 #include <pluginlib/class_list_macros.h>
+
 #ifdef PLUGINLIB_EXPORT_CLASS
-  PLUGINLIB_EXPORT_CLASS(pandora_geotiff_plugins::PathWriter, pandora_geotiff::MapWriterPluginInterface)
+PLUGINLIB_EXPORT_CLASS(pandora_geotiff_plugins::PathWriter, pandora_geotiff::MapWriterPluginInterface)
 #else
-  PLUGINLIB_DECLARE_CLASS(pandora_geotiff_plugins, PathWriter, pandora_geotiff_plugins::PathWriter, pandora_geotiff::MapWriterPluginInterface)
+PLUGINLIB_DECLARE_CLASS(pandora_geotiff_plugins, PathWriter, pandora_geotiff_plugins::PathWriter,
+                        pandora_geotiff::MapWriterPluginInterface)
 #endif
