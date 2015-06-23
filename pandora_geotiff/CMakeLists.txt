@@ -47,24 +47,25 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(geotiff_creator src/geotiff_creator.cpp)
-target_link_libraries(geotiff_creator ${catkin_LIBRARIES} ${QT_LIBRARIES})
+add_library(creator src/creator.cpp)
+target_link_libraries(creator ${catkin_LIBRARIES} ${QT_LIBRARIES})
 
-add_library(qr_csv_creator src/qr_csv_creator.cpp)
-target_link_libraries(qr_csv_creator ${catkin_LIBRARIES})
-add_dependencies(qr_csv_creator ${catkin_EXPORTED_TARGETS})
+#add_library(qr_csv_creator src/qr_csv_creator.cpp)
+#target_link_libraries(qr_csv_creator ${catkin_LIBRARIES})
+#add_dependencies(qr_csv_creator ${catkin_EXPORTED_TARGETS})
 
-add_library(map_generator src/map_generator.cpp)
-target_link_libraries(map_generator  geotiff_creator ${catkin_LIBRARIES} ${QT_LIBRARIES})
-add_dependencies(map_generator ${${PROJECT_NAME}_EXPORTED_TARGETS})
+#add_library(map_generator src/map_generator.cpp)
+#target_link_libraries(map_generator  geotiff_creator ${catkin_LIBRARIES} ${QT_LIBRARIES})
+#add_dependencies(map_generator ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
+add_library(server src/server.cpp)
+target_link_libraries(server creator ${catkin_LIBRARIES})
 
 add_executable(pandora_geotiff_node src/pandora_geotiff_node.cpp)
 target_link_libraries(pandora_geotiff_node
       ${catkin_LIBRARIES}
-      map_generator
-      geotiff_creator
-      qr_csv_creator
+      server
+      creator
       )
 
 ############################## ROSLINT ##############################

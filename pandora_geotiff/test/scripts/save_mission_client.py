@@ -12,11 +12,10 @@ class SaveMissionClient():
 
     def save_mission_client(self, mission_name):
         print('WAITING FOR SEVICE')
-        wait_for_service('pandora_geotiff_node/saveMission')
+        wait_for_service('geotiff/saveMission')
         msg = String(mission_name)
         try:
-            save_mission = ServiceProxy('pandora_geotiff_node/saveMission',
-                                        SaveMission)
+            save_mission = ServiceProxy('geotiff/saveMission', SaveMission)
             save_mission(msg)
         except ServiceException as e:
             print('Service call failed: ' + str(e))

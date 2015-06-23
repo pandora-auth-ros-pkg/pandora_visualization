@@ -36,17 +36,57 @@
  *   Chamzas Konstantinos <chamzask@gmail.com>
  *********************************************************************/
 
+#include <string>
+#include <vector>
+
+#include "pandora_geotiff/SaveMission.h"
 #include "pandora_geotiff/server.h"
 
+#include "pandora_geotiff/creator.h"
 
-int main(int argc, char **argv)
+
+namespace pandora_geotiff
 {
-  ros::init(argc, argv, "pandora_geotiff_node");
-  ROS_INFO("Starting geotiff server...");
+  Server::Server()
+  {
+    save_mission_ = nh_.advertiseService("geotiff/saveMission", &Server::handleRequest, this);
+    mapSubscriber_ = nh_.subscribe("/slam/map", 1000, &Server::receiveMap, this);
 
-  pandora_geotiff::Server server;
+    /**
+     * Geotiff configuration.
+     */
 
-  ROS_INFO("Geotiff server started...");
+    ROS_INFO("Geotiff node started.");
+  }
 
-  ros::spin();
-}
+  Server::~Server()
+  {
+    ROS_INFO("Destroying geotiff server...");
+  }
+
+  bool Server::handleRequest(SaveMission::Request &req, SaveMission::Response &res)
+  {
+    ROS_INFO("SaveMission service was requested.");
+
+    missionName_ = req.SaveMisionFileName.data;
+    this -> createGeotiff(req.SaveMisionFileName.data);
+    return true;
+  }
+
+  void Server::receiveMap(nav_msgs::OccupancyGrid map)
+  {
+    ROS_INFO("Received map.");
+  }
+
+  void Server::createGeotiff(const std::string &fileName)
+  {
+    ROS_INFO("Starting geotiff creation of mission: %s.", fileName.c_str());
+
+    creator_.createBackgroundImage();
+
+    // Save geotiff to the home directory.
+    creator_.saveGeotiff("/");
+  }
+
+}  // namespace pandora_geotiff
+

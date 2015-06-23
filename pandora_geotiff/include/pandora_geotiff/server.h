@@ -34,19 +34,97 @@
  *
  * Authors:
  *   Chamzas Konstantinos <chamzask@gmail.com>
+ *   Sideris Konstantinos <siderisk@auth.gr>
  *********************************************************************/
 
-#include "pandora_geotiff/server.h"
+#ifndef PANDORA_GEOTIFF_SERVER_H
+#define PANDORA_GEOTIFF_SERVER_H
+
+#include <vector>
+#include <map>
+#include <string>
+#include <sys/types.h>
+
+#include <unistd.h>
+#include <pwd.h>
+
+#include "ros/ros.h"
+#include "nav_msgs/OccupancyGrid.h"
+
+#include "pandora_geotiff/SaveMission.h"
+
+/**
+ * Geotiff layers.
+ */
+
+#include "pandora_geotiff/creator.h"
 
 
-int main(int argc, char **argv)
+namespace pandora_geotiff
 {
-  ros::init(argc, argv, "pandora_geotiff_node");
-  ROS_INFO("Starting geotiff server...");
+  class Server
+  {
+    public:
+      /**
+       * @brief Server constructor
+       */
 
-  pandora_geotiff::Server server;
+      Server();
 
-  ROS_INFO("Geotiff server started...");
+      /**
+       * @brief Server destructor
+       */
 
-  ros::spin();
-}
+      ~Server();
+
+      /**
+       * @brief Receive geotiff requests.
+       */
+
+      bool handleRequest(SaveMission::Request &req, SaveMission::Response &res);
+
+      /**
+       * @brief Receive the map produced by slam.
+       */
+
+      void receiveMap(nav_msgs::OccupancyGrid map);
+
+    private:
+
+      /**
+       * @brief Sets the MissionName.
+       */
+
+      void setMissionName(const std::string &missionName);
+
+      /**
+       * @brief Create the geotiff.
+       */
+
+      void createGeotiff(const std::string &fileName);
+
+      //!< The name of the mission.
+      std::string missionName_;
+
+      //!< The mission prefix. e.g: "/RRL_2015_PANDORA_"
+      std::string missionNamePrefix_;
+
+      //!< The file extension e.g: ".tiff"
+      std::string missionNameExtention_;
+
+      //!< ROS node handler.
+      ros::NodeHandle nh_;
+
+      //!< ROS Service to handle request for the geotiff creation.
+      ros::ServiceServer save_mission_;
+
+      //!< Subscriber to receive the map.
+      ros::Subscriber mapSubscriber_;
+
+      //!< Object to draw the geotiff.
+      Creator creator_;
+
+  };
+}  // namespace pandora_geotiff
+
+#endif  // PANDORA_GEOTIFF_SERVER_H
