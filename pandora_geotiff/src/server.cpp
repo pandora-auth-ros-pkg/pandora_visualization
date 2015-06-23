@@ -49,12 +49,44 @@ namespace pandora_geotiff
 {
   Server::Server()
   {
+    std::string nodeName = ros::this_node::getName();
+
+    mapReceived_ = false;
+    pathReceived_ = false;
+
     save_mission_ = nh_.advertiseService("geotiff/saveMission", &Server::handleRequest, this);
-    mapSubscriber_ = nh_.subscribe("/slam/map", 1000, &Server::receiveMap, this);
 
     /**
      * Geotiff configuration.
      */
+
+    /**
+     * Map configuration.
+     */
+
+    nh_.param(nodeName + "/explored_map/bottom_threshold", MAP_BOTTOM_THRESHOLD, 0);
+    nh_.param(nodeName + "/explored_map/top_threshold", MAP_TOP_THRESHOLD, 50);
+    nh_.param(nodeName + "/explored_map/map_color", MAP_COLOR, std::string("WHITE_MAX"));
+
+    nh_.param(nodeName + "/explored_map/wall_bottom_threshold", WALL_BOTTOM_THRESHOLD, 52);
+    nh_.param(nodeName + "/explored_map/wall_top_threshold", WALL_TOP_THRESHOLD, 255);
+    nh_.param(nodeName + "/explored_map/wall_color", WALL_COLOR, std::string("SOLID_BLUE"));
+
+    /**
+     * Topics.
+     */
+
+    nh_.param(nodeName + "/topics/map", MAP_TOPIC, std::string("/slam/map"));
+    nh_.param(nodeName + "/topics/trajectory", PATH_TOPIC, std::string("/trajectory"));
+    nh_.param(nodeName + "/topics/coverage", COVERAGE_TOPIC, std::string("/data_fusion/sensor_coverage/kinect_space"));
+
+    /**
+     * Register subscribers and start listening for input.
+     */
+
+    mapSubscriber_ = nh_.subscribe(MAP_TOPIC, 1000, &Server::receiveMap, this);
+    pathSubscriber_ = nh_.subscribe(PATH_TOPIC, 1000, &Server::receivePath, this);
+    coverageSub_ = nh_.subscribe(COVERAGE_TOPIC, 1000, &Server::receiveCoverageMap, this);
 
     ROS_INFO("Geotiff node started.");
   }
@@ -73,15 +105,40 @@ namespace pandora_geotiff
     return true;
   }
 
-  void Server::receiveMap(nav_msgs::OccupancyGrid map)
+  void Server::receiveMap(const nav_msgs::OccupancyGrid &map)
   {
     ROS_INFO("Received map.");
+
+    if (!mapReceived_)
+      mapReceived_ = true;
+
+    map_ = map;
+  }
+
+  void Server::receivePath(const nav_msgs::Path &path)
+  {
+  }
+
+  void Server::receiveCoverageMap(const nav_msgs::OccupancyGrid &map)
+  {
+  }
+
+  void Server::drawMap()
+  {
+    creator_.drawMap(map_, MAP_COLOR, MAP_BOTTOM_THRESHOLD, MAP_TOP_THRESHOLD, 1);
+    creator_.drawMap(map_, WALL_COLOR, WALL_BOTTOM_THRESHOLD, WALL_TOP_THRESHOLD, 0);
   }
 
   void Server::createGeotiff(const std::string &fileName)
   {
     ROS_INFO("Starting geotiff creation of mission: %s.", fileName.c_str());
 
+    if (mapReceived_) {
+    } else {
+      ROS_FATAL("Map is not available.");
+    }
+
+    this -> drawMap();
     creator_.createBackgroundImage();
 
     // Save geotiff to the home directory.

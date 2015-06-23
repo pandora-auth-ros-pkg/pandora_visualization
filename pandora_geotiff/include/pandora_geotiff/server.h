@@ -50,6 +50,7 @@
 
 #include "ros/ros.h"
 #include "nav_msgs/OccupancyGrid.h"
+#include "nav_msgs/Path.h"
 
 #include "pandora_geotiff/SaveMission.h"
 
@@ -87,7 +88,17 @@ namespace pandora_geotiff
        * @brief Receive the map produced by slam.
        */
 
-      void receiveMap(nav_msgs::OccupancyGrid map);
+      void receiveMap(const nav_msgs::OccupancyGrid &map);
+
+      /**
+       * @brief Receive the robot's trajectory.
+       */
+
+      void receivePath(const nav_msgs::Path &path);
+
+      void receiveCoverageMap(const nav_msgs::OccupancyGrid &map);
+
+      void drawMap();
 
     private:
 
@@ -121,8 +132,44 @@ namespace pandora_geotiff
       //!< Subscriber to receive the map.
       ros::Subscriber mapSubscriber_;
 
+      //!< Subscriber to the robot's path.
+      ros::Subscriber pathSubscriber_;
+
+      //!< Subscriber to the covered area.
+      ros::Subscriber coverageSub_;
+
       //!< Object to draw the geotiff.
       Creator creator_;
+
+      //!< Map received from SLAM.
+      nav_msgs::OccupancyGrid map_;
+
+      /**
+       * Topics.
+       */
+
+      std::string MAP_TOPIC;
+      std::string PATH_TOPIC;
+      std::string COVERAGE_TOPIC;
+
+      /**
+       * Flags.
+       */
+
+      bool mapReceived_;
+      bool pathReceived_;
+
+      /**
+       * Map parameters.
+       */
+
+      std::string MAP_COLOR;
+      int MAP_BOTTOM_THRESHOLD;
+      int MAP_TOP_THRESHOLD;
+
+      std::string WALL_COLOR;
+      int WALL_BOTTOM_THRESHOLD;
+      int WALL_TOP_THRESHOLD;
 
   };
 }  // namespace pandora_geotiff
