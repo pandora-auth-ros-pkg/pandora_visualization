@@ -73,6 +73,15 @@ namespace pandora_geotiff
     nh_.param(nodeName + "/explored_map/wall_color", WALL_COLOR, std::string("SOLID_BLUE"));
 
     /**
+     * Path configuration.
+     */
+
+    nh_.param(nodeName + "/arrow/color", ARROW_COLOR, std::string("DIAMOND"));
+    nh_.param(nodeName + "/arrow/size", ARROW_SIZE, 20);
+    nh_.param(nodeName + "/path/color", PATH_COLOR, std::string("SOLID_ORANGE"));
+    nh_.param(nodeName + "/path/width", PATH_WIDTH, 10);
+
+    /**
      * Topics.
      */
 
@@ -107,16 +116,24 @@ namespace pandora_geotiff
 
   void Server::receiveMap(const nav_msgs::OccupancyGrid &map)
   {
-    ROS_INFO("Received map.");
 
-    if (!mapReceived_)
+    if (!mapReceived_) {
+      ROS_INFO("Received map.");
       mapReceived_ = true;
+    }
 
     map_ = map;
   }
 
   void Server::receivePath(const nav_msgs::Path &path)
   {
+
+    if (!pathReceived_) {
+      ROS_INFO("Received path.");
+      pathReceived_ = true;
+    }
+
+    path_ = path;
   }
 
   void Server::receiveCoverageMap(const nav_msgs::OccupancyGrid &map)
@@ -129,20 +146,53 @@ namespace pandora_geotiff
     creator_.drawMap(map_, WALL_COLOR, WALL_BOTTOM_THRESHOLD, WALL_TOP_THRESHOLD, 0);
   }
 
-  void Server::createGeotiff(const std::string &fileName)
+  void Server::drawPath()
   {
-    ROS_INFO("Starting geotiff creation of mission: %s.", fileName.c_str());
+    ROS_INFO("Drawing the path...");
 
-    if (mapReceived_) {
-    } else {
-      ROS_FATAL("Map is not available.");
+    std::vector<geometry_msgs::PoseStamped> &path_vector(path_.poses);
+
+    size_t size = path_vector.size();
+
+    std::vector<Eigen::Vector2f> pointVector;
+    pointVector.resize(size);
+
+    ROS_INFO("Path size: %u", size);
+
+    for (size_t i = 0; i < size; ++i) {
+      const geometry_msgs::PoseStamped &pose(path_vector[i]);
+      pointVector[i] = Eigen::Vector2f(pose.pose.position.x, pose.pose.position.y);
     }
 
+    if (size > 0) {
+      creator_.drawPath(pointVector, PATH_COLOR, PATH_WIDTH);
+      creator_.drawPOI(pointVector[0], ARROW_COLOR, "", "ARROW", "", ARROW_SIZE);
+    }
+
+    ROS_INFO("The robot's path is ready.");
+  }
+
+  void Server::createGeotiff(const std::string &fileName)
+  {
+    ROS_INFO("Starting geotiff creation for mission: %s.", fileName.c_str());
+
+    if (!mapReceived_)
+      ROS_ERROR("Map is not available.");
+
+    if (!pathReceived_)
+      ROS_ERROR("Path is not available.");
+
     this -> drawMap();
+    this -> drawPath();
+
     creator_.createBackgroundImage();
 
     // Save geotiff to the home directory.
-    creator_.saveGeotiff("/");
+    creator_.saveGeotiff("");
+
+    // Reset the environment.
+    mapReceived_ = false;
+    pathReceived_ = false;
   }
 
 }  // namespace pandora_geotiff

@@ -7,7 +7,7 @@ from geometry_msgs.msg import PoseStamped
 
 
 def talker():
-    pub = Publisher('/slam/occupancyGridMap', OccupancyGrid, queue_size=10)
+    pub = Publisher('/slam/map', OccupancyGrid, queue_size=10)
 
     pub2 = Publisher('robot_trajectory', Path, queue_size=10)
     pub3 = Publisher('/data_fusion/sensor_coverage/coverage_map',
@@ -21,7 +21,6 @@ def talker():
         rospy.loginfo("Publishing a Simple Map")
         pub.publish(my_map)
         pub2.publish(my_path)
-        pub3.publish(my_map)
         r.sleep()
 
 

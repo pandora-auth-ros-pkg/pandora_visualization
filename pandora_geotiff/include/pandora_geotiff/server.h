@@ -100,6 +100,8 @@ namespace pandora_geotiff
 
       void drawMap();
 
+      void drawPath();
+
     private:
 
       /**
@@ -144,6 +146,9 @@ namespace pandora_geotiff
       //!< Map received from SLAM.
       nav_msgs::OccupancyGrid map_;
 
+      //!< Robot's trajectory.
+      nav_msgs::Path path_;
+
       /**
        * Topics.
        */
@@ -170,6 +175,16 @@ namespace pandora_geotiff
       std::string WALL_COLOR;
       int WALL_BOTTOM_THRESHOLD;
       int WALL_TOP_THRESHOLD;
+
+      /**
+       * Path parameters.
+       */
+
+      std::string ARROW_COLOR;
+      int ARROW_SIZE;
+
+      std::string PATH_COLOR;
+      int PATH_WIDTH;
 
   };
 }  // namespace pandora_geotiff
