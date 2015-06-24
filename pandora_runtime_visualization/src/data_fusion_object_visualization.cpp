@@ -16,7 +16,7 @@ class ObjectVisualization
     ros::Publisher _thermal_marker_pub ;
     ros::Publisher _sound_marker_pub ;
     ros::Publisher _co2_marker_pub ;
-    ros::Publisher _victimImage_marker_pub ;
+    ros::Publisher _visualVictim_marker_pub ;
     ros::Publisher _motion_marker_pub ;
     ros::Publisher _victims_visited_marker_pub ;
     ros::Publisher _victims_to_go_marker_pub ;
@@ -57,7 +57,7 @@ ObjectVisualization::ObjectVisualization()
   _thermal_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("thermals_markers", 1);
   _sound_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("sounds_markers", 1);
   _co2_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("co2s_markers", 1);
-  _victimImage_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("victimImages_markers", 1);
+  _visualVictim_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("visualVictims_markers", 1);
   _motion_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("motions_markers", 1);
   _victims_visited_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("victims_to_go_markers", 1);
   _victims_to_go_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("victims_visited_markers", 1);
@@ -80,7 +80,7 @@ void ObjectVisualization::broadcastTimerCb(const ros::TimerEvent& event)
   _thermal_marker_pub.publish(_markersSrv.response.thermals);
   _sound_marker_pub.publish(_markersSrv.response.sounds);
   _co2_marker_pub.publish(_markersSrv.response.co2s);
-  _victimImage_marker_pub.publish(_markersSrv.response.victimImages);
+  _visualVictim_marker_pub.publish(_markersSrv.response.visualVictims);
   _motion_marker_pub.publish(_markersSrv.response.motions);
   _landoltc_marker_pub.publish(_markersSrv.response.landoltcs);
   _dataMatrix_marker_pub.publish(_markersSrv.response.dataMatrices);
