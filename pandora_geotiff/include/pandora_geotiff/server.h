@@ -48,15 +48,16 @@
 #include <unistd.h>
 #include <pwd.h>
 
-#include "ros/ros.h"
-#include "nav_msgs/OccupancyGrid.h"
-#include "nav_msgs/Path.h"
+#include <boost/lexical_cast.hpp>
 
-#include "pandora_geotiff/SaveMission.h"
+#include <ros/ros.h>
+#include <tf/transform_listener.h>
+#include <nav_msgs/OccupancyGrid.h>
+#include <nav_msgs/Path.h>
+#include <geometry_msgs/PoseStamped.h>
 
-/**
- * Geotiff layers.
- */
+#include <pandora_geotiff/SaveMission.h>
+#include <pandora_data_fusion_msgs/GeotiffSrv.h>
 
 #include "pandora_geotiff/creator.h"
 
@@ -102,6 +103,13 @@ namespace pandora_geotiff
 
       void drawPath();
 
+      void drawObject(std::vector<geometry_msgs::PoseStamped> &object, std::string &color, std::string &shape,
+                      int size);
+
+      void drawObjects();
+
+      void getObjects();
+
     private:
 
       /**
@@ -140,6 +148,9 @@ namespace pandora_geotiff
       //!< Subscriber to the covered area.
       ros::Subscriber coverageSub_;
 
+      //!< Client for Data Fusion's object service.
+      ros::ServiceClient objectService_;
+
       //!< Object to draw the geotiff.
       Creator creator_;
 
@@ -148,6 +159,14 @@ namespace pandora_geotiff
 
       //!< Robot's trajectory.
       nav_msgs::Path path_;
+
+      /**
+       * Data Fusion's objects.
+       */
+
+      std::vector<geometry_msgs::PoseStamped> victims_;
+      std::vector<geometry_msgs::PoseStamped> qrs_;
+      std::vector<geometry_msgs::PoseStamped> hazmats_;
 
       /**
        * Topics.
@@ -163,6 +182,7 @@ namespace pandora_geotiff
 
       bool mapReceived_;
       bool pathReceived_;
+      bool objectsReceived_;
 
       /**
        * Map parameters.
@@ -185,6 +205,25 @@ namespace pandora_geotiff
 
       std::string PATH_COLOR;
       int PATH_WIDTH;
+
+      /**
+       * Objects parameters.
+       */
+
+      std::string OBJECT_TEXT_COLOR;
+      std::string OBJECTS_SERVICE;
+
+      std::string HAZMAT_COLOR;
+      std::string HAZMAT_SHAPE;
+      int HAZMAT_SIZE;
+
+      std::string QR_COLOR;
+      std::string QR_SHAPE;
+      int QR_SIZE;
+
+      std::string VICTIM_COLOR;
+      std::string VICTIM_SHAPE;
+      int VICTIM_SIZE;
 
   };
 }  // namespace pandora_geotiff
