@@ -25,7 +25,7 @@ class ObjectVisualization
 
     ros::NodeHandle _nh;
 
-    pandora_data_fusion_msgs::GetMarkersSrv _markersSrv;
+    pandora_data_fusion_msgs::GetMarkers _markersSrv;
 
     void broadcastTimerCb(const ros::TimerEvent& event);
 
@@ -45,7 +45,7 @@ ObjectVisualization::ObjectVisualization()
 
   //~ ros::Duration(15).sleep();
 
-  _getMarkersClient = _nh.serviceClient<pandora_data_fusion_msgs::GetMarkersSrv>
+  _getMarkersClient = _nh.serviceClient<pandora_data_fusion_msgs::GetMarkers>
     ("/data_fusion/get_markers");
 
   _hazmat_marker_pub = _nh.advertise<visualization_msgs::MarkerArray>("hazmats_markers", 1);
