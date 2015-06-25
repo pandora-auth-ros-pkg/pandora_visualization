@@ -1,6 +1,6 @@
 #include "ros/ros.h"
 
-#include "pandora_data_fusion_msgs/GetMarkersSrv.h"
+#include "pandora_data_fusion_msgs/GetMarkers.h"
 
 class ObjectVisualization
 {
