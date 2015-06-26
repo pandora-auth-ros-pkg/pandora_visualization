@@ -200,7 +200,7 @@ namespace pandora_geotiff
        * Rotate according to yaw and pitch.
        */
 
-      coords = Eigen::Vector2f(x * cos(yaw) + y * sin(yaw), x * cos(yaw) + y * sin(yaw));
+      coords = Eigen::Vector2f(x * cos(yaw) + y * sin(yaw), y * cos(yaw) + x * sin(yaw));
       txt = boost::lexical_cast<std::string> (i + 1);
 
       creator_.drawPOI(coords, color, OBJECT_TEXT_COLOR, shape, txt, size);
@@ -302,6 +302,7 @@ namespace pandora_geotiff
 
     this -> drawMap();
     this -> drawPath();
+    this -> drawObjects();
 
     creator_.createBackgroundImage();
 

@@ -13,7 +13,7 @@
   </node>
 
   <node pkg="pandora_geotiff"
-        type="data_fusion_mock_srv"
+        type="objects_srv.py"
         name="DataFusionSrvMock"
         output="screen" >
 
@@ -27,7 +27,7 @@
   <node pkg="tf"
         type="static_transform_publisher"
         name="map_broadcaster2"
-        args="0 0 0 0 0 0 1 map data 100" />
+        args="0 0 0 0 0 0 map data 100" />
 
 </launch>
 
