@@ -37,6 +37,7 @@
  *********************************************************************/
 
 #include <vector>
+#include <string>
 #include <ros/package.h>
 #include "gtest/gtest.h"
 
