@@ -8,6 +8,7 @@ install:
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y python-catkin-pkg python-rosdep python-wstool ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-ros python-pip
+  - sudo apt-get install libeigen3-dev
   - sudo pip install pandoradep
   - sudo rosdep init
   - rosdep update
