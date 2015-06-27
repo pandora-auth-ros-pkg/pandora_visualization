@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 2.8.3)
 project(pandora_geotiff)
 find_package(catkin REQUIRED COMPONENTS
   cmake_modules
-  pluginlib
   roscpp
   roslint
   std_msgs
@@ -32,7 +31,6 @@ generate_messages(
 catkin_package(
   INCLUDE_DIRS include
   CATKIN_DEPENDS
-    pluginlib
     roscpp
     std_msgs
     tf
@@ -53,10 +51,6 @@ target_link_libraries(creator ${catkin_LIBRARIES} ${QT_LIBRARIES})
 #add_library(qr_csv_creator src/qr_csv_creator.cpp)
 #target_link_libraries(qr_csv_creator ${catkin_LIBRARIES})
 #add_dependencies(qr_csv_creator ${catkin_EXPORTED_TARGETS})
-
-#add_library(map_generator src/map_generator.cpp)
-#target_link_libraries(map_generator  geotiff_creator ${catkin_LIBRARIES} ${QT_LIBRARIES})
-#add_dependencies(map_generator ${${PROJECT_NAME}_EXPORTED_TARGETS})
 
 add_library(server src/server.cpp)
 target_link_libraries(server creator ${catkin_LIBRARIES})

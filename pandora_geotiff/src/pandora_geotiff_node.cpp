@@ -34,6 +34,7 @@
  *
  * Authors:
  *   Chamzas Konstantinos <chamzask@gmail.com>
+ *   Sideris Konstantinos <siderisk@auth.gr>
  *********************************************************************/
 
 #include "pandora_geotiff/server.h"
