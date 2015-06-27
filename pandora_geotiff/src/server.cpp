@@ -73,6 +73,14 @@ namespace pandora_geotiff
     nh_.param(nodeName + "/explored_map/wall_color", WALL_COLOR, std::string("SOLID_BLUE"));
 
     /**
+     * Coverage Map configuration.
+     */
+
+    nh_.param(nodeName + "/coverage_map/color", COVERAGE_COLOR, std::string("LIGHT_GREEN_MAX"));
+    nh_.param(nodeName + "/coverage_map/bottom_threshold", COV_BOTTOM_THRESHOLD, -5);
+    nh_.param(nodeName + "/coverage_map/top_threshold", COV_TOP_THRESHOLD, 100);
+
+    /**
      * Path configuration.
      */
 
@@ -141,7 +149,8 @@ namespace pandora_geotiff
 
     ROS_INFO("Calling %s", objectService_.getService().c_str());
 
-    if (!objectService_.call(dataFusionSrv)) {
+    if (!objectService_.call(dataFusionSrv))
+    {
       ROS_ERROR("Cannot receive Objects, service %s has failed.", objectService_.getService().c_str());
       return;
     }
@@ -173,11 +182,15 @@ namespace pandora_geotiff
     float x;
     float y;
 
-    for (int i = 0; i < object.size(); i++) {
-      try {
+    for (int i = 0; i < object.size(); i++)
+    {
+      try
+      {
         listener.waitForTransform("/map", object[i].header.frame_id, object[i].header.stamp, ros::Duration(3));
-        listener.lookupTransform ("/map", object[i].header.frame_id, object[i].header.stamp, transform);
-      } catch (tf::TransformException &ex) {
+        listener.lookupTransform("/map", object[i].header.frame_id, object[i].header.stamp, transform);
+      }
+      catch (tf::TransformException &ex)
+      {
         ROS_ERROR("%s", ex.what());
         ros::Duration(1.0).sleep();
       }
@@ -211,7 +224,8 @@ namespace pandora_geotiff
   {
     this -> getObjects();
 
-    if (!objectsReceived_) {
+    if (!objectsReceived_)
+    {
       ROS_ERROR("Objects are not available");
       return;
     }
@@ -234,8 +248,8 @@ namespace pandora_geotiff
 
   void Server::receiveMap(const nav_msgs::OccupancyGrid &map)
   {
-
-    if (!mapReceived_) {
+    if (!mapReceived_)
+    {
       ROS_INFO("Received map.");
       mapReceived_ = true;
     }
@@ -245,8 +259,8 @@ namespace pandora_geotiff
 
   void Server::receivePath(const nav_msgs::Path &path)
   {
-
-    if (!pathReceived_) {
+    if (!pathReceived_)
+    {
       ROS_INFO("Received path.");
       pathReceived_ = true;
     }
@@ -256,6 +270,18 @@ namespace pandora_geotiff
 
   void Server::receiveCoverageMap(const nav_msgs::OccupancyGrid &map)
   {
+    if (!coverageMapReceived_)
+    {
+      ROS_INFO("Received coverage map.");
+      coverageMapReceived_ = true;
+    }
+
+    coverageMap_ = map;
+  }
+
+  void Server::drawCoverageMap()
+  {
+    creator_.drawMap(coverageMap_, COVERAGE_COLOR, COV_BOTTOM_THRESHOLD, COV_BOTTOM_THRESHOLD);
   }
 
   void Server::drawMap()
@@ -282,7 +308,8 @@ namespace pandora_geotiff
       pointVector[i] = Eigen::Vector2f(pose.pose.position.x, pose.pose.position.y);
     }
 
-    if (size > 0) {
+    if (size > 0)
+    {
       creator_.drawPath(pointVector, PATH_COLOR, PATH_WIDTH);
       creator_.drawPOI(pointVector[0], ARROW_COLOR, "", "ARROW", "", ARROW_SIZE);
     }
@@ -294,13 +321,18 @@ namespace pandora_geotiff
   {
     ROS_INFO("Starting geotiff creation for mission: %s.", fileName.c_str());
 
+    // TODO(mujx) There errors should be returned when the service is called to notify the client.
     if (!mapReceived_)
       ROS_ERROR("Map is not available.");
 
     if (!pathReceived_)
       ROS_ERROR("Path is not available.");
 
+    if (!coverageMapReceived_)
+      ROS_WARN("Coverage map is not available.");
+
     this -> drawMap();
+    this -> drawCoverageMap();
     this -> drawPath();
     this -> drawObjects();
 

@@ -101,6 +101,8 @@ namespace pandora_geotiff
 
       void drawMap();
 
+      void drawCoverageMap();
+
       void drawPath();
 
       void drawObject(std::vector<geometry_msgs::PoseStamped> &object, std::string &color, std::string &shape,
@@ -111,7 +113,6 @@ namespace pandora_geotiff
       void getObjects();
 
     private:
-
       /**
        * @brief Sets the MissionName.
        */
@@ -157,6 +158,9 @@ namespace pandora_geotiff
       //!< Map received from SLAM.
       nav_msgs::OccupancyGrid map_;
 
+      //!< Coverage map received from Data Fusion.
+      nav_msgs::OccupancyGrid coverageMap_;
+
       //!< Robot's trajectory.
       nav_msgs::Path path_;
 
@@ -183,6 +187,7 @@ namespace pandora_geotiff
       bool mapReceived_;
       bool pathReceived_;
       bool objectsReceived_;
+      bool coverageMapReceived_;
 
       /**
        * Map parameters.
@@ -195,6 +200,10 @@ namespace pandora_geotiff
       std::string WALL_COLOR;
       int WALL_BOTTOM_THRESHOLD;
       int WALL_TOP_THRESHOLD;
+
+      std::string COVERAGE_COLOR;
+      int COV_TOP_THRESHOLD;
+      int COV_BOTTOM_THRESHOLD;
 
       /**
        * Path parameters.
@@ -224,7 +233,6 @@ namespace pandora_geotiff
       std::string VICTIM_COLOR;
       std::string VICTIM_SHAPE;
       int VICTIM_SIZE;
-
   };
 }  // namespace pandora_geotiff
 

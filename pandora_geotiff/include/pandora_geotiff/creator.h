@@ -186,7 +186,6 @@ namespace pandora_geotiff
       void drawCheckers(const int &size, const std::string &darkColor, const std::string &lightColor, QPainter *pen);
 
     private:
-
       Eigen::Vector2i metersToGeotiffPosition(const Eigen::Vector2f point);
 
       //!< The name of the mission.
