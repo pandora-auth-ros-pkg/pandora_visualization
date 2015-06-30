@@ -242,8 +242,8 @@ namespace pandora_geotiff
   {
     ROS_INFO("SaveMission service was requested.");
 
-    missionName_ = req.SaveMisionFileName.data;
-    this -> createGeotiff(req.SaveMisionFileName.data);
+    missionName_ = req.SaveMissionFileName.data;
+    this -> createGeotiff(req.SaveMissionFileName.data);
     return true;
   }
 
