@@ -125,15 +125,6 @@ namespace pandora_geotiff
 
       void createGeotiff(const std::string &fileName);
 
-      //!< The name of the mission.
-      std::string missionName_;
-
-      //!< The mission prefix. e.g: "/RRL_2015_PANDORA_"
-      std::string missionNamePrefix_;
-
-      //!< The file extension e.g: ".tiff"
-      std::string missionNameExtention_;
-
       //!< ROS node handler.
       ros::NodeHandle nh_;
 
