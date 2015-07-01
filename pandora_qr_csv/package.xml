@@ -1,0 +1,33 @@
+<package format="2">
+  <name>pandora_qr_csv</name>
+  <version>0.0.0</version>
+  <description>Creates the RoboCup CSV file with the QRs</description>
+
+  <maintainer email="siderisk@auth.gr">Sideris Konstantinos</maintainer>
+
+  <license>BSD</license>
+
+
+  <url type="bugtracker">https://github.com/pandora-auth-ros-pkg/pandora_visualization/issues</url>
+  <url type="repository">https://github.com/pandora-auth-ros-pkg/pandora_visualization.git</url>
+
+  <author>Chamzas Konstantinos</author>
+  <author>Sideris Konstantinos</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>cmake_modules</build_depend>
+  <build_depend>roslint</build_depend>
+  <build_depend>roslib</build_depend>
+
+  <build_depend>message_generation</build_depend>
+  <exec_depend>message_runtime</exec_depend>
+
+  <depend>roscpp</depend>
+  <depend>std_msgs</depend>
+  <depend>pandora_data_fusion_msgs</depend>
+
+  <test_depend>rosunit</test_depend>
+  <test_depend>rostest</test_depend>
+  <test_depend>pandora_testing_tools</test_depend>
+</package>
