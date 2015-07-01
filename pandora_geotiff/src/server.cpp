@@ -42,7 +42,7 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include "pandora_data_fusion_msgs/GeotiffSrv.h"
+#include "pandora_data_fusion_msgs/GetGeotiff.h"
 
 #include "pandora_geotiff/SaveMission.h"
 #include "pandora_geotiff/server.h"
@@ -134,7 +134,7 @@ namespace pandora_geotiff
      * Register Data Fusion's service.
      */
 
-    objectService_ = nh_.serviceClient<pandora_data_fusion_msgs::GeotiffSrv>(OBJECTS_SERVICE);
+    objectService_ = nh_.serviceClient<pandora_data_fusion_msgs::GetGeotiff>(OBJECTS_SERVICE);
 
     ROS_INFO("Geotiff node started.");
   }
@@ -146,7 +146,7 @@ namespace pandora_geotiff
 
   void Server::getObjects()
   {
-    pandora_data_fusion_msgs::GeotiffSrv dataFusionSrv;
+    pandora_data_fusion_msgs::GetGeotiff dataFusionSrv;
 
     ROS_INFO("Calling %s", objectService_.getService().c_str());
 
@@ -161,11 +161,12 @@ namespace pandora_geotiff
     victims_ = dataFusionSrv.response.victims;
     qrs_ = dataFusionSrv.response.qrs;
     hazmats_ = dataFusionSrv.response.hazmats;
+    obstacles_ = dataFusionSrv.response.obstacles;
 
     objectsReceived_ = true;
   }
 
-  void Server::drawObject(std::vector<geometry_msgs::PoseStamped> &object, std::string &color, std::string &shape,
+  void Server::drawObject(geometry_msgs::PoseStamped &poseStamped, std::string &color, std::string &shape, int id,
                           int size)
   {
     Eigen::Vector2f coords;
@@ -183,42 +184,39 @@ namespace pandora_geotiff
     float x;
     float y;
 
-    for (int i = 0; i < object.size(); i++)
+    try
     {
-      try
-      {
-        listener.waitForTransform("/map", object[i].header.frame_id, object[i].header.stamp, ros::Duration(3));
-        listener.lookupTransform("/map", object[i].header.frame_id, object[i].header.stamp, transform);
-      }
-      catch (tf::TransformException &ex)
-      {
-        ROS_ERROR("%s", ex.what());
-        ros::Duration(1.0).sleep();
-      }
-
-      /**
-       * Get origin and roll, pitch, yaw.
-       */
-
-      transform.getBasis().getRPY(roll, pitch, yaw);
-      origin = transform.getOrigin();
-
-      /**
-       * Add the origin vector.
-       */
-
-      x = object[i].pose.position.x + origin.x();
-      y = object[i].pose.position.y + origin.y();
-
-      /**
-       * Rotate according to yaw and pitch.
-       */
-
-      coords = Eigen::Vector2f(x * cos(yaw) + y * sin(yaw), y * cos(yaw) + x * sin(yaw));
-      txt = boost::lexical_cast<std::string> (i + 1);
-
-      creator_.drawPOI(coords, color, OBJECT_TEXT_COLOR, shape, txt, size);
+      listener.waitForTransform("/map", poseStamped.header.frame_id, poseStamped.header.stamp, ros::Duration(3));
+      listener.lookupTransform("/map", poseStamped.header.frame_id, poseStamped.header.stamp, transform);
     }
+    catch (tf::TransformException &ex)
+    {
+      ROS_ERROR("%s", ex.what());
+      ros::Duration(1.0).sleep();
+    }
+
+    /**
+     * Get origin and roll, pitch, yaw.
+     */
+
+    transform.getBasis().getRPY(roll, pitch, yaw);
+    origin = transform.getOrigin();
+
+    /**
+     * Add the origin vector.
+     */
+
+    x = poseStamped.pose.position.x + origin.x();
+    y = poseStamped.pose.position.y + origin.y();
+
+    /**
+     * Rotate according to yaw and pitch.
+     */
+
+    coords = Eigen::Vector2f(x * cos(yaw) + y * sin(yaw), y * cos(yaw) + x * sin(yaw));
+    txt = boost::lexical_cast<std::string> (id);
+
+    creator_.drawPOI(coords, color, OBJECT_TEXT_COLOR, shape, txt, size);
   }
 
   void Server::drawObjects()
@@ -233,9 +231,29 @@ namespace pandora_geotiff
 
     ROS_INFO("Drawing Data Fusion's objects.");
 
-    this -> drawObject(hazmats_, HAZMAT_COLOR, HAZMAT_SHAPE, HAZMAT_SIZE);
-    this -> drawObject(qrs_, QR_COLOR, QR_SHAPE, QR_SIZE);
-    this -> drawObject(victims_, VICTIM_COLOR, VICTIM_SHAPE, VICTIM_SIZE);
+    for (int i = 0; i < qrs_.size(); i++)
+    {
+      ROS_INFO("Drawing QRs.");
+      this -> drawObject(qrs_[i].qrPose, QR_COLOR, QR_SHAPE, qrs_[i].id, QR_SIZE);
+    }
+
+    for (int i = 0; i < hazmats_.size(); i++)
+    {
+      ROS_INFO("Drawing Hazmats.");
+      this -> drawObject(hazmats_[i].hazmatPose, HAZMAT_COLOR, HAZMAT_SHAPE, hazmats_[i].id, HAZMAT_SIZE);
+    }
+
+    for (int i = 0; i < victims_.size(); i++)
+    {
+      ROS_INFO("Drawing Victims.");
+      this -> drawObject(victims_[i].victimPose, VICTIM_COLOR, VICTIM_SHAPE, victims_[i].id, VICTIM_SIZE);
+    }
+
+    for (int i = 0; i < obstacles_.size(); i++)
+    {
+      ROS_INFO("Drawing Obstacles.");
+      this -> drawObject(obstacles_[i].obstaclePose, QR_COLOR, QR_SHAPE, obstacles_[i].id, QR_SIZE);
+    }
   }
 
   bool Server::handleRequest(SaveMission::Request &req, SaveMission::Response &res)

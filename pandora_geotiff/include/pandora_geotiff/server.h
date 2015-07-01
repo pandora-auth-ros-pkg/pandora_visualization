@@ -57,7 +57,11 @@
 #include <geometry_msgs/PoseStamped.h>
 
 #include <pandora_geotiff/SaveMission.h>
-#include <pandora_data_fusion_msgs/GeotiffSrv.h>
+#include <pandora_data_fusion_msgs/GetGeotiff.h>
+#include <pandora_data_fusion_msgs/VictimInfo.h>
+#include <pandora_data_fusion_msgs/QrInfo.h>
+#include <pandora_data_fusion_msgs/HazmatInfo.h>
+#include <pandora_data_fusion_msgs/ObstacleInfo.h>
 
 #include "pandora_geotiff/creator.h"
 
@@ -105,7 +109,7 @@ namespace pandora_geotiff
 
       void drawPath();
 
-      void drawObject(std::vector<geometry_msgs::PoseStamped> &object, std::string &color, std::string &shape,
+      void drawObject(geometry_msgs::PoseStamped &poseStamped, std::string &color, std::string &shape, int id,
                       int size);
 
       void drawObjects();
@@ -159,9 +163,10 @@ namespace pandora_geotiff
        * Data Fusion's objects.
        */
 
-      std::vector<geometry_msgs::PoseStamped> victims_;
-      std::vector<geometry_msgs::PoseStamped> qrs_;
-      std::vector<geometry_msgs::PoseStamped> hazmats_;
+      std::vector<pandora_data_fusion_msgs::VictimInfo> victims_;
+      std::vector<pandora_data_fusion_msgs::QrInfo> qrs_;
+      std::vector<pandora_data_fusion_msgs::HazmatInfo> hazmats_;
+      std::vector<pandora_data_fusion_msgs::ObstacleInfo> obstacles_;
 
       /**
        * Topics.
