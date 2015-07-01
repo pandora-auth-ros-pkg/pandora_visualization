@@ -48,10 +48,6 @@ include_directories(
 add_library(creator src/creator.cpp)
 target_link_libraries(creator ${catkin_LIBRARIES} ${QT_LIBRARIES})
 
-#add_library(qr_csv_creator src/qr_csv_creator.cpp)
-#target_link_libraries(qr_csv_creator ${catkin_LIBRARIES})
-#add_dependencies(qr_csv_creator ${catkin_EXPORTED_TARGETS})
-
 add_library(server src/server.cpp)
 target_link_libraries(server creator ${catkin_LIBRARIES})
 
