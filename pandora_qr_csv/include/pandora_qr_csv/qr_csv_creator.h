@@ -73,10 +73,10 @@ namespace pandora_qr_csv
        * @param missionName [&std::string] The name of the mission given by the
        *                                   service client.
        * @param startDate   [&std::string] The date of the RoboCup mission.
-       * @param startTime   [&std::string] The time that the mission started.
+       * @param startTime   [&std::string] The current time of the csv request.
        */
 
-      void generateQrCsv(std::string &missionName, std::string &startDate, std::string &startTime);
+      void generateQrCsv(std::string &missionName, std::string &currentDate, std::string &currentTime);
 
       bool handleRequest(createCSV::Request &req, createCSV::Response &res);
 

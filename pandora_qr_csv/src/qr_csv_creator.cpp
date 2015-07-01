@@ -156,7 +156,7 @@ namespace pandora_qr_csv
     return dateStamp;
   }
 
-  void QrCsvCreator::generateQrCsv(std::string &missionName, std::string &date, std::string &time)
+  void QrCsvCreator::generateQrCsv(std::string &missionName, std::string &currentDate, std::string &currentTime)
   {
     ROS_INFO("Creating CSV file.");
 
@@ -181,8 +181,8 @@ namespace pandora_qr_csv
     csvFile << "\"" + teamName_ + "\"" << std::endl;
     csvFile << "\"" + country_ + "\"" << std::endl;
 
-    csvFile << "\"" + date + "\"" << std::endl;
-    csvFile << "\"" + time + "\"" << std::endl;
+    csvFile << "\"" + currentDate + "\"" << std::endl;
+    csvFile << "\"" + currentTime + "\"" << std::endl;
     csvFile << "\"" + missionName + "\"" << std::endl;
 
     // A blank line is needed.
@@ -193,7 +193,7 @@ namespace pandora_qr_csv
 
     for (int i = 0 ; i< qrs_.size(); i++)
     {
-      csvFile << qrs_[i].id << "," << time
+      csvFile << qrs_[i].id << "," << currentTime
                             << "," << qrs_[i].content
                             << "," << qrs_[i].qrPose.pose.position.x
                             << "," << qrs_[i].qrPose.pose.position.y
