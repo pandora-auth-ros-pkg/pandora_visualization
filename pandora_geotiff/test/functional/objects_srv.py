@@ -20,9 +20,9 @@ def random_qr_info(id):
     qr.id = id
     qr.qrFrameId = 'map'
     qr.timeFound = rospy.Time.now()
-    qr.qrPose.pose.position.x = random.randint(2, 10)
-    qr.qrPose.pose.position.y = random.randint(2, 10)
-    qr.qrPose.pose.position.z = random.randint(2, 10)
+    qr.qrPose.pose.position.x = random.randint(3, 7)
+    qr.qrPose.pose.position.y = random.randint(3, 7)
+    qr.qrPose.pose.position.z = random.randint(3, 7)
     qr.qrPose.header.frame_id = 'map'
     qr.probability = random.random()
     qr.content = generate_content()
@@ -63,9 +63,9 @@ def random_obstacle_info(id):
     obstacle.id = id
     obstacle.obstacleFrameId = 'map'
     obstacle.timeFound = rospy.Time.now()
-    obstacle.obstaclePose.pose.position.x = random.randint(2, 10)
-    obstacle.obstaclePose.pose.position.y = random.randint(2, 10)
-    obstacle.obstaclePose.pose.position.z = random.randint(2, 10)
+    obstacle.obstaclePose.pose.position.x = random.randint(3, 8)
+    obstacle.obstaclePose.pose.position.y = random.randint(3, 8)
+    obstacle.obstaclePose.pose.position.z = random.randint(3, 8)
     obstacle.obstaclePose.header.frame_id = 'map'
     obstacle.probability = random.random()
 

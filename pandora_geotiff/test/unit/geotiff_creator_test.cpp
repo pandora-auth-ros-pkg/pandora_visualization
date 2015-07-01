@@ -74,7 +74,7 @@ namespace pandora_geotiff
     gc.drawMap(map, "WHITE_MAX", -5, 5, 1);
     gc.drawMap(map, "MAGENTA", 80, 110, 0);
     gc.drawPath(points, "SOLID_ORANGE", 3);
-    gc.drawPOI(Eigen::Vector2f(0, 0), "BLACK", "WHITE", "DIAMOND", "5", 20);
+    gc.drawPOI(Eigen::Vector2f(2, 5), "PINK", "WHITE_MAX", "CIRCLE", "5", 20);
     gc.drawPOI(Eigen::Vector2f(4, 3), "SOLID_RED", "WHITE_MAX", "DIAMOND", "5", 50);
     gc.drawPOI(Eigen::Vector2f(7, 6), "SOLID_BLUE", "WHITE_MAX", "CIRCLE", "5", 30);
     gc.drawPOI(Eigen::Vector2f(6, 7), "SOLID_BLUE", "WHITE_MAX", "CIRCLE", "5", 30);

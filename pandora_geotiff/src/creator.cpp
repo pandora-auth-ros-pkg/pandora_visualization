@@ -100,6 +100,7 @@ namespace pandora_geotiff
     colorMap["SOLID_ORANGE"]    = QColor(255, 100, 30);
     colorMap["SOLID_BLUE"]      = QColor(10, 10, 240);
     colorMap["MAGENTA"]         = QColor(120, 0, 140, 100);
+    colorMap["PINK"]            = QColor(180, 0, 200);
   }
 
   Creator::~Creator() {}

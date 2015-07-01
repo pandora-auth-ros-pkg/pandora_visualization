@@ -229,6 +229,10 @@ namespace pandora_geotiff
       std::string VICTIM_COLOR;
       std::string VICTIM_SHAPE;
       int VICTIM_SIZE;
+
+      std::string OBSTACLE_SHAPE;
+      std::string OBSTACLE_COLOR;
+      int OBSTACLE_SIZE;
   };
 }  // namespace pandora_geotiff
 

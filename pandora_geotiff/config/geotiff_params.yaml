@@ -64,4 +64,7 @@ qr:
   size: 35
   shape: "CIRCLE"
 
-
+obstacle:
+    color: "PINK"
+    size: 20
+    shape: "CIRCLE"

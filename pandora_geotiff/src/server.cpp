@@ -94,19 +94,23 @@ namespace pandora_geotiff
      * Points of interest configuration.
      */
 
-    nh_.param(nodeName + "/general_objects/txt_color", OBJECT_TEXT_COLOR, std::string("SOLID_ORANGE"));
+    nh_.param(nodeName + "/general_objects/txt_color", OBJECT_TEXT_COLOR, std::string("WHITE_MAX"));
 
     nh_.param(nodeName + "/hazmat/shape", HAZMAT_SHAPE, std::string("DIAMOND"));
     nh_.param(nodeName + "/hazmat/color", HAZMAT_COLOR, std::string("SOLID_ORANGE"));
-    nh_.param(nodeName + "/hazmat/size", HAZMAT_SIZE, 1);
+    nh_.param(nodeName + "/hazmat/size", HAZMAT_SIZE, 42);
 
-    nh_.param(nodeName + "/qr/shape", QR_SHAPE, std::string("DIAMOND"));
-    nh_.param(nodeName + "/qr/color", QR_COLOR, std::string("SOLID_ORANGE"));
-    nh_.param(nodeName + "/qr/size", QR_SIZE, 1);
+    nh_.param(nodeName + "/qr/shape", QR_SHAPE, std::string("CIRCLE"));
+    nh_.param(nodeName + "/qr/color", QR_COLOR, std::string("SOLID_BLUE"));
+    nh_.param(nodeName + "/qr/size", QR_SIZE, 35);
 
-    nh_.param(nodeName + "/victim/shape", VICTIM_SHAPE, std::string("DIAMOND"));
-    nh_.param(nodeName + "/victim/color", VICTIM_COLOR, std::string("SOLID_ORANGE"));
-    nh_.param(nodeName + "/victim/size", VICTIM_SIZE, 1);
+    nh_.param(nodeName + "/victim/shape", VICTIM_SHAPE, std::string("CIRCLE"));
+    nh_.param(nodeName + "/victim/color", VICTIM_COLOR, std::string("SOLID_RED"));
+    nh_.param(nodeName + "/victim/size", VICTIM_SIZE, 35);
+
+    nh_.param(nodeName + "/obstacle/shape", OBSTACLE_SHAPE, std::string("CIRCLE"));
+    nh_.param(nodeName + "/obstacle/color", OBSTACLE_COLOR, std::string("PINK"));
+    nh_.param(nodeName + "/obstacle/size", OBSTACLE_SIZE, 20);
 
     /**
      * Topics.
@@ -252,7 +256,7 @@ namespace pandora_geotiff
     for (int i = 0; i < obstacles_.size(); i++)
     {
       ROS_INFO("Drawing Obstacles.");
-      this -> drawObject(obstacles_[i].obstaclePose, QR_COLOR, QR_SHAPE, obstacles_[i].id, QR_SIZE);
+      this -> drawObject(obstacles_[i].obstaclePose, OBSTACLE_COLOR, OBSTACLE_SHAPE, obstacles_[i].id, OBSTACLE_SIZE);
     }
   }
 
