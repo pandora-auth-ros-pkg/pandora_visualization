@@ -319,7 +319,8 @@ namespace pandora_geotiff
     for (int i = 0; i < obstacles_.size(); i++)
     {
       sortedIndex = index[i];
-      this -> drawObject(obstacles_[sortedIndex].obstaclePose, OBSTACLE_COLOR, OBSTACLE_SHAPE, i + 1, OBSTACLE_SIZE);
+      this -> drawObject(obstacles_[sortedIndex].obstaclePose,
+                         OBSTACLE_COLOR, OBSTACLE_SHAPE, qrs_.size() + i + 1, OBSTACLE_SIZE);
     }
 
     index.clear();
