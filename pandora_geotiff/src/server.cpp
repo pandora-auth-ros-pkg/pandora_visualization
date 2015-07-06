@@ -393,7 +393,8 @@ namespace pandora_geotiff
 
     ROS_INFO("Path size: %lu", size);
 
-    for (size_t i = 0; i < size; ++i) {
+    for (size_t i = 0; i < size; ++i)
+    {
       const geometry_msgs::PoseStamped &pose(path_vector[i]);
       pointVector[i] = Eigen::Vector2f(pose.pose.position.x, pose.pose.position.y);
     }
@@ -411,13 +412,15 @@ namespace pandora_geotiff
   {
     ROS_INFO("Starting geotiff creation for mission: %s.", fileName.c_str());
 
-    if (!mapReceived_) {
+    if (!mapReceived_)
+    {
       ROS_ERROR("Map is not available.");
       ROS_ERROR("Exiting...");
       return false;
     }
 
-    if (!pathReceived_) {
+    if (!pathReceived_)
+    {
       ROS_ERROR("Path is not available.");
       ROS_ERROR("Exiting...");
       return false;
