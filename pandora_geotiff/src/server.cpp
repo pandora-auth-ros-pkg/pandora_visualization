@@ -370,7 +370,7 @@ namespace pandora_geotiff
 
   void Server::drawCoverageMap()
   {
-    creator_.drawMap(coverageMap_, COVERAGE_COLOR, COV_BOTTOM_THRESHOLD, COV_BOTTOM_THRESHOLD);
+    creator_.drawMap(coverageMap_, COVERAGE_COLOR, COV_BOTTOM_THRESHOLD, COV_TOP_THRESHOLD, 1);
   }
 
   void Server::drawMap()
